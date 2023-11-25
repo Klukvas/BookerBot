@@ -4,15 +4,18 @@ import mongoose from 'mongoose';
 import {Seat} from './models/seat';
 import { CreateUserIfNotExist } from './views/CreateUserIfNotExist';
 import { ReservedSeats } from './models';
-import { CheckReservedCount } from './views/CheckReservedCount';
-import { IUser } from './models/user';
-import { Message } from './types/new-message';
 import moment from 'moment';
 import 'moment-timezone'; 
-import { findAvailableSeats } from './views/create-reservation/find-available-seats';
-import { handleCreateReservationCommand } from './views/create-reservation/handle-create-reservation-command';
-import { reservationStep1 } from './views/create-reservation/reservation-step-1';
 import { createSuggestion } from './views/createSuggestion';
+import { responseMessages } from './utils/response-messages';
+import { validateDuration } from './utils/validate-duration';
+import { createReservation } from './views/commands/create-reservation';
+import { chooseDuration } from './views/commands/choose-duration';
+import { chooseSeat } from './views/commands/choose-seat';
+import { step3 } from './views/steps/step3';
+import { step2 } from './views/steps/step2';
+import { chooseDate } from './views/commands/choose-date';
+import { step4 } from './views/steps/step4';
 
 moment.tz.setDefault('UTC');
 
@@ -28,7 +31,7 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 });
 
-// //Mock
+//Mock
 // (async () => {
 //   let i = 0;
 //   while(i < 14){
@@ -105,106 +108,35 @@ app.get('/suggestion', async (req, res) => {
 })
 
 app.post('/new-message', async (req, res) => {
-  let user;
-  let responseMessage = '';
   const { message }  = req.body;
-
-  try {
-    user = await CreateUserIfNotExist(message);
-  } catch (error) {
-    console.error('Error creating user:', error);
-    return res.status(500).send('Error creating user');
-  }
-  // user want to start a new reservation process
+  const user = await CreateUserIfNotExist(message);
+  const currentReservation = await ReservedSeats.findOne({user: user._id, reservationFinished: false})
   if(message.text == '/create-reservation'){
-    const result = await handleCreateReservationCommand(user)
-    if(result.sendResponse) res.status(result.responseData.status).send(result.responseData.responseMessage)
-  }
-    try {
-      // check if user has reservarion in progress
-      // if he is - that means that he is in his way to reserve the seat
-      const reservationInProgress = await ReservedSeats.findOne({user: user._id, reserationFinished: false})
-      
-      if(reservationInProgress){
-        // on step 1 we expect date time from user
-        if(reservationInProgress.step == 1){
-          const step1Result = await reservationStep1(message.text, reservationInProgress)
-          if(step1Result.sendResponse) res.status(step1Result.responseData.status).send(step1Result.responseData.responseMessage)
-        }else if(reservationInProgress.step == 2){
-          let hours;
-          try{
-            hours = Number(message.text)
-          }catch(error){
-            res.send('Wrong format. Just type any number.\nExample: 5')
-          }
-          if(hours){
-            if(hours > maxReservationHours){
-              res.send('Sorry, but for now, nax hours is 12')
-              return
-            }
-            let reservedSeat = await ReservedSeats.findOne({_id: reservationInProgress._id})
-            console.log('reservedSeat: ', reservedSeat!.reservedFrom)
-            console.log('reservedSeat: ', typeof(reservedSeat!.reservedFrom))
-            const reservedTo = moment(reservedSeat!.reservedFrom).tz('UTC').add(hours, 'hours')
-            await ReservedSeats.updateOne(
-              { _id: reservationInProgress._id }, 
-              { $set: { step: 3, reservedFor: hours, reservedTo: reservedTo} }
-            )
-            
-            reservedSeat = await ReservedSeats.findOne({_id: reservationInProgress._id})
-            //TODO: Need to understand with seat is awailable
-            const awailableSeats = await findAvailableSeats(reservedSeat!)
-            if(awailableSeats){
-              let prettyAwailableSeats = ""
-              for(const seat of awailableSeats){
-                prettyAwailableSeats += `Name: ${seat.name}\t Type: ${seat.type}\n\n`
-              }
-              res.status(200).send(`Great. Now U could pick a place(U clould skip it). Awailable seats:\n ${prettyAwailableSeats}`)
-              return
-            }else{
-              await ReservedSeats.findOneAndDelete({_id: reservationInProgress._id})
-              
-              res.send('Cound not find any free seat. Try anouther date and time')
-            }
-            
-          }
-          res.send('Wrong format. Just type any number.\nExample: 5')
-        }else if(reservationInProgress.step == 3){
-          const seatName = message.text
-          if(seatName !== 'skip'){
-            const seat = await Seat.findOne({name: seatName})
-            if(seat){
-              await ReservedSeats.updateOne({ _id: reservationInProgress._id }, { $set: { seatId: seat._id, reserationFinished: true} })
-              const finishedReservation = await ReservedSeats.findOne({ _id: reservationInProgress._id })
-              res.send(`Awesome. U now have new reservation: ${finishedReservation}`)
-              return
-            }else{
-              res.send('It is not valid. Use skip to skip place selecting or use name to select the seat')
-              return
-            }
+    await createReservation(user, {maxReservationsPerUser, res})
+  }else if(message.text == '/choose-duration'){
+    await chooseDuration({currentReservation, user, res})
+  }else if(message.text == '/choose-seat'){
+    await chooseSeat({user, currentReservation, res})
+  }else if(message.text == '/choose-date'){
+    await chooseDate({user, currentReservation, res})
+  }else{
+    const currentReservation = await ReservedSeats.findOne({user: user._id})
+    if(!currentReservation){
+      res.send(responseMessages.help)
 
-          }else{
-            await ReservedSeats.updateOne({ _id: reservationInProgress._id }, { $set: { reserationFinished: true } })
-            const finishedReservation = await ReservedSeats.findOne({ _id: reservationInProgress._id })
-            console.log('finishedReservation: ', finishedReservation)
-            res.status(200).json(finishedReservation)
-            return
-          }
-        }
-      }
-      
-    } catch (error) {
-      console.error('Error checking reserved seats:', error);
-      res.status(500).send('Error getting reserved seats');
+      // step 3 in progress (/choose-duration)
+    }else if (currentReservation.step == 3 && !currentReservation.stepFinished){
+      return await step3({message: message.text, user, res})
+   
+      //step 2 in progress (/choose-seat)
+    }else if(currentReservation.step == 2 && !currentReservation.stepFinished){
+      await step2({message: message.text, user, res})
+
+      //step 4 in progress (/choose-date)
+    }else if(currentReservation.step == 4 && !currentReservation.stepFinished){
+      await step4({message: message.text, user, res, currentReservation})
     }
+  }
 
 
-
-
-
-
-
-  
-  
-});
-
+})

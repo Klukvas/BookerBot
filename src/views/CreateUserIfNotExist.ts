@@ -5,7 +5,6 @@ import { Message } from "../types/new-message";
 export async function CreateUserIfNotExist(message: Message):Promise<IUser> {
 
     const existingUser = await User.findOne({userId: message.from.id})
-    console.log('existingUser', existingUser)
     if(existingUser){
        return existingUser
     }
