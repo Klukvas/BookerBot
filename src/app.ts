@@ -27,14 +27,14 @@ const app: Express = express();
 const PORT = process.env.PORT;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 });
 
-//Mock
+// Mock
 // (async () => {
 //   let i = 0;
-//   while(i < 14){
+//   while(i < 3){
 //     await Seat.create({
 //       name: `SupaCool${Math.random() * (1000 - 10) + 10}`,
 //       cost: Math.random() * (1000 - 10) + 10,
@@ -126,7 +126,7 @@ app.post('/new-message', async (req, res) => {
 
       // step 3 in progress (/choose-duration)
     }else if (currentReservation.step == 3 && !currentReservation.stepFinished){
-      return await step3({message: message.text, user, res})
+      return await step3({message: message.text, user, res, currentReservation})
    
       //step 2 in progress (/choose-seat)
     }else if(currentReservation.step == 2 && !currentReservation.stepFinished){
@@ -138,5 +138,5 @@ app.post('/new-message', async (req, res) => {
     }
   }
 
-
 })
+export default app

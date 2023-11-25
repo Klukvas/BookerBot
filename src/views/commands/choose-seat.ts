@@ -1,6 +1,10 @@
 import { Response } from "express";
 import { IReserved, ReservedSeats, Seat } from "../../models";
 import { IUser } from "../../models/user";
+import { createSuggestion } from "../suggestions/create-suggestion";
+import { findAvailableSeats } from "../../utils/find-available-seats";
+import { responseMessages } from "../../utils/response-messages";
+
 
 type ChooseSeatArgs = {
   currentReservation: IReserved | null;
@@ -10,7 +14,7 @@ type ChooseSeatArgs = {
 
 export async function chooseSeat(args: ChooseSeatArgs) {
   const { currentReservation, user, res } = args;
-  const allSeats = await Seat.find({});
+  let allSeats = await Seat.find({});
 
   try {
     if (!currentReservation) {
@@ -21,11 +25,31 @@ export async function chooseSeat(args: ChooseSeatArgs) {
     } else if (currentReservation.step === 4 && !currentReservation.stepFinished) {
       res.status(400).send('Видимо, вы ошиблись. Ожидалось, что вы введете дату');
     } else {
-      await ReservedSeats.updateOne(
-        { user: user._id },
-        { $set: { step: 2, stepFinished: false } }
-      );
-      res.status(200).send(`Отлично! Давайте выберем место. Вот список всех мест:\n${allSeats}`);
+      //If we have reservedFrom and reservedTo values - we could say which seats available for the user
+      if(currentReservation.reservedFrom && currentReservation.reservedTo){
+       const foundAvailableSeats = await findAvailableSeats({currentReservation})
+       console.log('foundAvailableSeats: ', foundAvailableSeats)
+       console.log('wtf')
+       if(foundAvailableSeats.length >= 1){
+          console.log('here')
+          await ReservedSeats.updateOne(
+            { user: user._id },
+            { $set: { step: 2, stepFinished: false } }
+          );
+          res.status(200).send(`Отлично! Давайте выберем место. Вот список всех мест:\n${foundAvailableSeats}`);
+        }else{
+          //Todo: here should be suggestion
+          await ReservedSeats.deleteOne({ user: user._id,  reservationFinished: false})
+          res.status(400).send(responseMessages.failTryAgain)
+        }
+      }else{
+        await ReservedSeats.updateOne(
+          { user: user._id },
+          { $set: { step: 2, stepFinished: false } }
+        );
+        res.status(200).send(`Отлично! Давайте выберем место. Вот список всех мест:\n${allSeats}`);
+      }
+      
     }
   } catch (error) {
     console.error(error);
