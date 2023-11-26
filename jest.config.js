@@ -1,9 +1,9 @@
 
 module.exports = {
-  roots: ['<rootDir>/tests'],
+  roots: ['<rootDir>/src/__tests__'],
   resetMocks: true,
   moduleNameMapper: {
-    '~/(.*)$': '<rootDir>/tests/$1'
+    '~/(.*)$': '<rootDir>/src/__tests__/$1'
   },
   preset: 'ts-jest',
   testEnvironment: 'node',

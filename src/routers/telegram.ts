@@ -21,6 +21,7 @@ class Telegram{
   }
   async newMessageHandler(req: Request, res: Response){
     const { message }  = req.body;
+    console.log('message: ', message)
     const user = await CreateUserIfNotExist(message);
     const currentReservation = await ReservedSeats.findOne({user: user._id, reservationFinished: false})
     if(message.text == '/create-reservation'){
@@ -31,6 +32,8 @@ class Telegram{
       await chooseSeat({user, currentReservation, res})
     }else if(message.text == '/choose-date'){
       await chooseDate({user, currentReservation, res})
+    }else if(message.text == '/help'){
+      res.send(responseMessages.help)
     }else{
       const currentReservation = await ReservedSeats.findOne({user: user._id})
       if(!currentReservation){
