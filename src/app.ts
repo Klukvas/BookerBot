@@ -1,8 +1,6 @@
-import express from "express";
-import logger from "./utils/core/logger";
-import connectToDb from "./utils/core/db";
 import App from "./utils/core/server"
-
+import moment from "moment";
+moment.tz.setDefault('UTC');
 
 
 const app = new App()

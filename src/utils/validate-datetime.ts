@@ -1,5 +1,6 @@
-import moment, { Moment } from "moment";
 import { responseMessages } from "./response-messages";
+import moment, {Moment} from 'moment-timezone'
+
 
 type ValidateDatetimeSuccessResult = {
   isValid: true
