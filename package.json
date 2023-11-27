@@ -4,8 +4,8 @@
   "description": "",
   "main": "dist/app.js",
   "engines": {
-    "node": "21.2.x",
-    "yarn": "1.22.x"
+    "node": "21.2.0",
+    "yarn": "1.22.19"
   },
   "scripts": {
     "start": "tsc && node dist/app.js",
