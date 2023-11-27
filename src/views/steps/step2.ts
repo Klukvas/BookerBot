@@ -2,9 +2,12 @@ import { Response } from "express"
 import { ReservedSeats, Seat } from "../../models"
 import { IUser } from "../../models/user"
 import { getNextSteps } from "../../utils/get-next-steps"
+import { Message } from "../../types/new-message"
+import { step2Responses } from "../../utils/response-messages"
+import { sendResponse } from "../../utils/send-response"
 
 type Step2Args = {
-    message: string
+    message: Message
     user: IUser
     res: Response
 }
@@ -12,18 +15,28 @@ type Step2Args = {
 export async function step2(args: Step2Args) {
   const {message, user, res} = args
   const selectedSeat = await Seat.findOne({
-    name: { $regex: new RegExp(`^${message.trim()}$`, 'i') }
+    name: { $regex: new RegExp(`^${message.text.trim()}$`, 'i') }
   });
   
   if(!selectedSeat){
-    res.send(`Возможно вы ошиблись. Но такого места не существует. Попробуйте еще раз`)
+    await sendResponse({
+      message: step2Responses.seatNotFound,
+      chatId: message.chat.id,
+      expressResp: res
+    })
+    // res.send(step2Responses.seatNotFound)
   }else{
     await ReservedSeats.updateOne(
       {user: user._id},
       {$set: {step: 2, stepFinished: true, seatId: selectedSeat._id}}
     )
     const nextSteps = await getNextSteps(user)
-    res.send(`Супер, вы выбрали место!\n${nextSteps}`)
+    await sendResponse({
+      message: `${step2Responses.success}\n${nextSteps}`,
+      chatId: message.chat.id,
+      expressResp: res
+    })
+    // res.send(`${step2Responses.success}\n${nextSteps}`)
   }
     
 }

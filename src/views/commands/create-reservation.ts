@@ -1,15 +1,17 @@
 import { Response } from "express";
 import { ReservedSeats } from "../../models";
 import { IUser } from "../../models/user";
-import { responseMessages, step1Responses } from "../../utils/response-messages";
+import { step1Responses } from "../../utils/response-messages";
 import env from "../../utils/core/env";
+import { sendResponse } from "../../utils/send-response";
 
 type CreateReservationCommandArgs = {
   res: Response
   user: IUser
+  chatId: number
 };
 
-export async function createReservation({user, res}: CreateReservationCommandArgs) {
+export async function createReservation({user, res, chatId}: CreateReservationCommandArgs) {
   // Remove expired reservations
   await ReservedSeats.deleteMany({ user: user._id, reservedTo: { $lte: new Date() }, reservationFinished: true });
 
@@ -18,7 +20,8 @@ export async function createReservation({user, res}: CreateReservationCommandArg
 
   // User should not have more than X active reservations
   if (finishedReservations.length >= env.maxReservationPerUser) {
-    res.status(400).send(step1Responses.tooManyReservations);
+    // res.status(400).send(step1Responses.tooManyReservations);
+    await sendResponse({message: step1Responses.tooManyReservations, chatId, expressResp: res})
     return;
   }
 
@@ -29,5 +32,6 @@ export async function createReservation({user, res}: CreateReservationCommandArg
     step: 1,
     stepFinished: true,
   });
-  res.status(200).send(step1Responses.success);
+  await sendResponse({message: step1Responses.success, chatId, expressResp: res})
+  // res.status(200).send(step1Responses.success);
 }

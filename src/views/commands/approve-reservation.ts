@@ -2,16 +2,23 @@ import { Response } from "express";
 import { IReserved, ReservedSeats } from "../../models";
 import { IUser } from "../../models/user";
 import { responseMessages } from "../../utils/response-messages";
+import { sendResponse } from "../../utils/send-response";
 
 type ApproveReservationArgs = {
-  currentReservation: IReserved | null;
-  user: IUser;
-  res: Response;
+  currentReservation: IReserved | null
+  user: IUser
+  res: Response
+  chatId: number
 };
 
-export async function approveReservatiom({currentReservation, user, res}: ApproveReservationArgs) {
+export async function approveReservatiom({currentReservation, user, res, chatId}: ApproveReservationArgs) {
   if(!currentReservation){
-    res.send(responseMessages.reservationNotFound)
+    await sendResponse({
+      message: responseMessages.reservationNotFound,
+      expressResp: res,
+      chatId
+    })
+    // res.send(responseMessages.reservationNotFound)
   }else{
     // check if time is not taken
     const sameReservations = await ReservedSeats.find({
@@ -23,10 +30,20 @@ export async function approveReservatiom({currentReservation, user, res}: Approv
     })
     if(sameReservations.length !== 0){
       await ReservedSeats.deleteOne({_id: currentReservation._id})
-      res.send(responseMessages.sameReservationFinished)
+      await sendResponse({
+        message: responseMessages.sameReservationFinished,
+        expressResp: res,
+        chatId
+      })
+      // res.send(responseMessages.sameReservationFinished)
     }else{
       await ReservedSeats.updateOne({_id: currentReservation._id}, {$set: {reservationFinished: true}})
-      res.send(responseMessages.reservationFinished)
+      await sendResponse({
+        message: responseMessages.reservationFinished,
+        expressResp: res,
+        chatId
+      })
+      // res.send(responseMessages.reservationFinished)
     }
 
   }

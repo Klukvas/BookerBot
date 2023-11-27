@@ -4,19 +4,21 @@ import { validateDatetime } from "../../utils/validate-datetime"
 import { IReserved, ReservedSeats } from "../../models"
 import { addDurationToDate } from "../../utils/add-duration-to-date"
 import { Moment } from "moment"
-import { responseMessages } from "../../utils/response-messages"
+import { responseMessages, step4Responses } from "../../utils/response-messages"
 import { getNextSteps } from "../../utils/get-next-steps"
+import { Message } from "../../types/new-message"
+import { sendResponse } from "../../utils/send-response"
 
 type Step4Args = {
   user: IUser
-  message: string
+  message: Message
   res: Response
   currentReservation: IReserved | null;
 }
 
 export async function step4(args: Step4Args) {
   const {message, user, res, currentReservation} = args
-  const validatedDateTime = validateDatetime(message)
+  const validatedDateTime = validateDatetime(message.text)
   if(validatedDateTime.isValid){
     if (!currentReservation) {
       await ReservedSeats.create({ 
@@ -24,7 +26,6 @@ export async function step4(args: Step4Args) {
         step: 4, 
         stepFinished: true,
         reservedFrom: validatedDateTime.value
-
       });
     }else{
       const updateObj: { reservedFrom: Moment; reservedTo?: Moment, stepFinished: boolean} = {
@@ -41,11 +42,21 @@ export async function step4(args: Step4Args) {
         {$set: updateObj}
       )
       const nextSteps = await getNextSteps(user)
-      res.send(`Замечательно! Время установлено. ${nextSteps}`)
+      await sendResponse({
+        message: `${step4Responses.success}\n${nextSteps}`,
+        chatId: message.chat.id,
+        expressResp: res
+      })
+      // res.send(`${step4Responses.success}\n${nextSteps}`)
     }
 
   }else{
-    res.status(422).send(validatedDateTime.error)
+    await sendResponse({
+      message: validatedDateTime.error,
+      chatId: message.chat.id,
+      expressResp: res
+    })
+    // res.status(422).send(validatedDateTime.error)
   }
 
 }

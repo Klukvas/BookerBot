@@ -1,4 +1,4 @@
-import { responseMessages } from "./response-messages";
+import { responseMessages, step4Responses } from "./response-messages";
 import moment, {Moment} from 'moment-timezone'
 
 
@@ -16,7 +16,6 @@ type ValidateDatetimeResult = ValidateDatetimeErrorResult | ValidateDatetimeSucc
 
 export function validateDatetime(messageText: string): ValidateDatetimeResult {
   let reservedFrom = moment(messageText, ['DD.MM.YYYY HH:mm', 'DD/MM/YYYY HH:mm'], true).tz('UTC');
-  console.log('customerDateTime: ', reservedFrom);
 
   // Check if the format is valid
   if (reservedFrom.isValid()) {
@@ -29,7 +28,7 @@ export function validateDatetime(messageText: string): ValidateDatetimeResult {
       if (reservedFrom.isAfter(maxAllowedDate)) {
         return {
           isValid: false,
-          error: responseMessages.dateTooFarInFuture
+          error: step4Responses.dateTooFarInFuture
         }
       } else {
         // Date is within the allowed range
@@ -41,13 +40,13 @@ export function validateDatetime(messageText: string): ValidateDatetimeResult {
     } else {
       return {
         isValid: false,
-        error: responseMessages.invalidMinutes
+        error: step4Responses.invalidMinutes
       };
     }
   } else {
     return {
       isValid: false,
-      error: responseMessages.invalidDateTimeFormat
+      error: step4Responses.invalidDateTimeFormat
     };
   }
 }

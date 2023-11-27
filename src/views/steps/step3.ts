@@ -6,9 +6,12 @@ import { getNextSteps } from "../../utils/get-next-steps"
 import { addDurationToDate } from "../../utils/add-duration-to-date"
 import { dateToMoment } from "../../utils/date-to-moment"
 import { Moment } from "moment"
+import { Message } from "../../types/new-message"
+import { step3Responses } from "../../utils/response-messages"
+import { sendResponse } from "../../utils/send-response"
 
 type Step3Args = {
-  message: string
+  message: Message
   user: IUser
   res: Response
   currentReservation: IReserved
@@ -17,14 +20,14 @@ type Step3Args = {
 
 export async function step3(args: Step3Args) {
   const {message, user, res, currentReservation} = args
-  const isValidDuration = validateDuration(message)
+  const isValidDuration = validateDuration(message.text)
     if(isValidDuration){
       let updateObj: { reservedTo?: Moment, step: number, duration: string, stepFinished: boolean} = 
-        { step: 3, duration: message, stepFinished: true}
+        { step: 3, duration: message.text, stepFinished: true}
       if(currentReservation.reservedFrom){
         const reservedTo = addDurationToDate(
           dateToMoment(currentReservation.reservedFrom),
-          message
+          message.text
         )
         updateObj['reservedTo'] = reservedTo
       }
@@ -33,8 +36,18 @@ export async function step3(args: Step3Args) {
         { $set: updateObj }
       )
       const nextSteps = await getNextSteps(user)
-      res.status(200).send(`Отлично! Продолжительность выбрана. ${nextSteps}`)
+      await sendResponse({
+        message: `${step3Responses.success}${nextSteps}`,
+        expressResp: res,
+        chatId: message.chat.id
+      })
+      // res.status(200).send(`${step3Responses.success}${nextSteps}`)
     }else{
-      res.status(422).send('Invalid duration')
+      await sendResponse({
+        message: step3Responses.invalidDuration,
+        expressResp: res,
+        chatId: message.chat.id
+      })
+      // res.status(422).send(step3Responses.invalidDuration)
     }
 }
