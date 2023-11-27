@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/app.js",
   "engines": {
-    "node": "20.x.x",
+    "node": "21.x.x",
     "yarn": "1.x.x"
   },
   "scripts": {

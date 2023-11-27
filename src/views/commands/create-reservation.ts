@@ -1,16 +1,15 @@
 import { Response } from "express";
 import { ReservedSeats } from "../../models";
 import { IUser } from "../../models/user";
-import { responseMessages } from "../../utils/response-messages";
+import { responseMessages, step1Responses } from "../../utils/response-messages";
+import env from "../../utils/core/env";
 
 type CreateReservationCommandArgs = {
-  maxReservationsPerUser?: number;
-  res: Response;
+  res: Response
+  user: IUser
 };
 
-export async function createReservation(user: IUser, args: CreateReservationCommandArgs) {
-  const { maxReservationsPerUser = 2, res } = args;
-
+export async function createReservation({user, res}: CreateReservationCommandArgs) {
   // Remove expired reservations
   await ReservedSeats.deleteMany({ user: user._id, reservedTo: { $lte: new Date() }, reservationFinished: true });
 
@@ -18,8 +17,8 @@ export async function createReservation(user: IUser, args: CreateReservationComm
   const finishedReservations = await ReservedSeats.find({ user: user._id, reservationFinished: true });
 
   // User should not have more than X active reservations
-  if (finishedReservations.length >= maxReservationsPerUser) {
-    res.status(400).send('Too many reservations');
+  if (finishedReservations.length >= env.maxReservationPerUser) {
+    res.status(400).send(step1Responses.tooManyReservations);
     return;
   }
 
@@ -30,6 +29,5 @@ export async function createReservation(user: IUser, args: CreateReservationComm
     step: 1,
     stepFinished: true,
   });
-
-  res.status(200).send(responseMessages.createReservationStep1);
+  res.status(200).send(step1Responses.success);
 }
