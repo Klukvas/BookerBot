@@ -2,9 +2,6 @@ import mongoose from "mongoose";
 import supertest from "supertest";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import App from "../utils/core/server";
-import { generateTelegramMessage } from "./core/generate-telegram-message";
-import { sendRequestToBot } from "./infra/send-request-to-bot";
-import { responseMessages } from "../utils/response-messages";
 import { ISeat } from "../models";
 import { connectv2, createSeats } from "./core/db";
 import { step1StartNewReservation } from "./interface/step-1-start-new-reservation";
@@ -14,6 +11,7 @@ import { step3ChooseDurationCommand } from "./interface/step3/step-3-choose-dura
 import { step3ChooseDuration } from "./interface/step3/step-3-choose-duration";
 import { step4ChooseDateCommand } from "./interface/step4/step-4-choose-date-command";
 import { step4ChooseDate } from "./interface/step4/step-4-choose-date";
+import { step5ApproveReservation } from "./interface/step-5-approve-reservation";
 
 const app = new App().app;
 const request = supertest(app);
@@ -45,7 +43,7 @@ describe('Seat-duration-date', () => {
     await step4ChooseDateCommand({request})
     await step4ChooseDate({request})
 
-    // exptectLastResponseToBe
+    await step5ApproveReservation({request})
 
   });
 
