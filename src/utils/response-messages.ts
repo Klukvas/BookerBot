@@ -1,3 +1,4 @@
+import env from "./core/env"
 
 export const commandNames = {
     //steps
@@ -30,6 +31,7 @@ export const expectAnoutherValue = {
 }
 
 export const step4Responses = {
+    closeTimeExceeded: `Извините, мо максильманое время на бронирования - ${env.maxReservationFromHour - 1}:30.`,
     _dateRule: 'Вы не можете выбрать дату более чем на неделю вперед.',
     _minutesRule: `
         Минуты в дате должно быть или 30 или 00.\n
@@ -100,6 +102,12 @@ export const activeReservationsResponse = {
     noActiveReservations: `У вас пока что нету активных резерваций. Что бы создать резервацию используйте команду ${commandNames.createReservation}`
 }
 
+export const nextStepMessages = {
+    pickDate: `Вы можете выбрать желаемую дату используя команду ${commandNames.chooseDate}\n`,
+    pickSeat: `Вы можете выбрать желаемое место используя команду ${commandNames.chooseSeat}}\n`,
+    pickDuration: `Вы можете выбрать продолжительность резервации используя команду ${commandNames.chooseDuration}\n`,
+    noStepsLeft: `Осталось лишь подтвердить вашу резервацию. Для этого используйте команду ${commandNames.approveReservation}\nДанные о резервации: `
+}
 
 export const responseMessages = {
     help: `

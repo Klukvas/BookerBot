@@ -7,6 +7,7 @@ class Env{
   protected readonly _maxReservationPerUser: number
   protected readonly _port: string
   protected readonly _botToken: string
+  protected readonly _maxReservationFromHour: number
   
   constructor(){
     dotenv.config();
@@ -16,7 +17,10 @@ class Env{
     this._maxReservationPerUser = Number(process.env.MAX_RESERVARION_PER_USER) || 2
     this._port = process.env.PORT || '3000'
     this._botToken = process.env.TELEGRAM_API_TOKEN || ''
+    this._maxReservationFromHour = Number(process.env.MAX_RESERVATION_FROM_HOUR) || 20
   }
+
+  get maxReservationFromHour(){return this._maxReservationFromHour}
 
   get dbName(){return this._dbName}
   

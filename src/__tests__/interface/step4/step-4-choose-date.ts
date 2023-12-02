@@ -2,6 +2,7 @@ import moment from "moment"
 import { generateTelegramMessage } from "../../core/generate-telegram-message"
 import { TestRequest } from "../../types/request"
 import { sendRequestToBot } from "../../infra/send-request-to-bot"
+import { step4Responses } from "../../../utils/response-messages"
 
 type Step4ChooseDateArgs = {
   date?: string
@@ -20,7 +21,7 @@ export async function step4ChooseDate(args: Step4ChooseDateArgs) {
     request
   } = args
   const message = generateTelegramMessage({messageText: date})
-  const response = await sendRequestToBot({request, message: message})
-  expect(response.text).toContain('Замечательно! Время установлено. Осталось лишь подтвердить вашу резервацию. Для этого используйте команду /approve-reservation')
-  
+  const {response, repliedMessage} = await sendRequestToBot({request, message: message})
+  expect(repliedMessage).toContain(step4Responses.success)
+  expect(response.statusCode).toBe(200)
 }

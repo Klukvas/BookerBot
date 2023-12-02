@@ -5,7 +5,8 @@ import { TestRequest } from "../types/request"
 
 
 export async function step5ApproveReservation({request}: TestRequest) {
-  const message = generateTelegramMessage({messageText: "/approve-reservation"})
-  const response = await sendRequestToBot({request, message: message})
-  expect(response.text).toBe(responseMessages.reservationFinished)
+  const message = generateTelegramMessage({messageText: "/approveReservation"})
+  const {response, repliedMessage} = await sendRequestToBot({request, message})
+  expect(repliedMessage).toBe(responseMessages.reservationFinished)
+  expect(response.statusCode).toBe(200)
 }

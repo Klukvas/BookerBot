@@ -1,6 +1,6 @@
 import { ReservedSeats } from "../models";
 import { IUser } from "../models/user";
-import { commandNames } from "./response-messages";
+import { commandNames, nextStepMessages } from "./response-messages";
 
 
 
@@ -13,16 +13,16 @@ export async function getNextSteps(user: IUser) {
     throw new Error(`Could not find reserved seat for next steps. User: ${user._id}`)
   }
   if(!reservedSeat.reservedFrom){
-    nextSteps += `Вы можете выбрать желаемую дату используя команду ${commandNames.chooseDate}\n`
+    nextSteps += nextStepMessages.pickDate
   }
   if(!reservedSeat.seatId){
-    nextSteps += `Вы можете выбрать желаемое место используя команду ${commandNames.chooseSeat}}\n`
+    nextSteps += nextStepMessages.pickSeat
   }
   if(!reservedSeat.duration){
-    nextSteps += `Вы можете выбрать продолжительность резервации используя команду ${commandNames.chooseDuration}\n`
+    nextSteps += nextStepMessages.pickDuration
   }
   if(nextSteps === ''){
-    nextSteps += `Осталось лишь подтвердить вашу резервацию. Для этого используйте команду ${commandNames.approveReservation}\nДанные о резервации: ${reservedSeat}`
+    nextSteps += nextStepMessages.noStepsLeft + `${reservedSeat}`
   }
 
   return nextSteps

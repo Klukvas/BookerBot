@@ -1,3 +1,4 @@
+import env from "./core/env";
 import { responseMessages, step4Responses } from "./response-messages";
 import moment, {Moment} from 'moment-timezone'
 
@@ -31,11 +32,19 @@ export function validateDatetime(messageText: string): ValidateDatetimeResult {
           error: step4Responses.dateTooFarInFuture
         }
       } else {
-        // Date is within the allowed range
-        return {
-          isValid: true,
-          value: reservedFrom
+        if(reservedFrom.hours() >= env.maxReservationFromHour){
+          return {
+            isValid: false,
+            error: step4Responses.closeTimeExceeded
+          }
+        }else{
+          // Date is within the allowed range
+          return {
+            isValid: true,
+            value: reservedFrom
+          }
         }
+        
       }
     } else {
       return {

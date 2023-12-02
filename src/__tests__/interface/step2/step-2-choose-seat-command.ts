@@ -10,11 +10,12 @@ type Step2ChooseSeatCommandArgs = {
 export async function step2ChooseSeatCommand(args: Step2ChooseSeatCommandArgs) {
   const {request, seats} = args
   // step 2 - /choose-seat
-  const step2Message = generateTelegramMessage({messageText: "/choose-seat"})
-  const step2Response = await sendRequestToBot({request, message: step2Message})
-  expect(step2Response.text).toContain('Отлично! Давайте выберем место. Вот список всех мест:')
+  const postMessage = generateTelegramMessage({messageText: "/chooseSeat"})
+  const {response, repliedMessage} = await sendRequestToBot({request, message: postMessage})
+  expect(repliedMessage).toContain('Отлично! Давайте выберем место. Вот список всех мест:')
   for(const seat of seats){
-    expect(step2Response.text).toContain(seat.name)
+    expect(repliedMessage).toContain(seat.name)
   }
+  expect(response.statusCode).toBe(200)
     
 }

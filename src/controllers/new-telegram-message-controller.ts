@@ -16,11 +16,10 @@ import { Message } from "../types/new-message";
 
 export async function newTelegramMessageController(req: Request, res: Response) {
   const { message }  = req.body;
+  // console.log('message: ', message)
   const chatId = message.chat.id;
-  console.log('message: ', message);
   const user = await CreateUserIfNotExist(message);
   let currentReservation = await ReservedSeats.findOne({ user: user._id, reservationFinished: false });
-  console.log('currentReservation: ', currentReservation)
   if(!message?.text){
     await sendResponse({
       message: responseMessages.unknownMessage,
@@ -37,7 +36,6 @@ export async function newTelegramMessageController(req: Request, res: Response) 
       stepFinished: true,
     });
   }
-
   switch (message.text) {
 
     case commandNames.start:
