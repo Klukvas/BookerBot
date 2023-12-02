@@ -12,6 +12,9 @@ import { step4ChooseDate } from "../interface/step4/step-4-choose-date";
 import { step5ApproveReservation } from "../interface/step-5-approve-reservation";
 import { createSeats } from "../core/db";
 import { ISeat } from "../../models";
+import { nextStepMessages, step2Responses, step3Responses, step4Responses } from "../../utils/response-messages";
+import { sendUserResponseToBot } from "../interface/send-user-response-to-bot";
+import { getTommorowDate } from "../infra/get-tommorow-date";
 
 
 
@@ -36,14 +39,27 @@ describe("seat-duration-date", () => {
   it("positive case", async () => {
     await step1StartNewReservation({request})
       
-    await step2ChooseSeatCommand({request, seats})
-    await step2ChooseSeat({request, seats})
-      
     await step3ChooseDurationCommand({request})
-    await step3ChooseDuration({request})
+    const expectedStep3Response = [
+      step3Responses.success,
+      nextStepMessages.pickDate,
+      nextStepMessages.pickSeat
+    ]
+    await sendUserResponseToBot({request, expectedTextList: expectedStep3Response, userMessage: "2:00"})
+
+    await step2ChooseSeatCommand({request, seats})
+    const expectedStep2Response = [
+      step2Responses.success,
+      nextStepMessages.pickDate,
+    ]
+    await sendUserResponseToBot({request, expectedTextList: expectedStep2Response, userMessage: seats[0].name})
 
     await step4ChooseDateCommand({request})
-    await step4ChooseDate({request})
+    const expectedStep4Response = [
+      step4Responses.success,
+      nextStepMessages.noStepsLeft,
+    ]
+    await sendUserResponseToBot({request, expectedTextList: expectedStep4Response, userMessage: getTommorowDate()})
 
     await step5ApproveReservation({request})
   });

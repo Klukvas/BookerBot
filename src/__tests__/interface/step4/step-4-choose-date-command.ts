@@ -5,7 +5,8 @@ import { TestRequest } from "../../types/request"
 
 export async function step4ChooseDateCommand(args: TestRequest) {
   const {request} = args
-  const message = generateTelegramMessage({messageText: "/choose-date"})
-  const response = await sendRequestToBot({request, message: message})
-  expect(response.text).toBe(step4Responses.successCommand)
+  const message = generateTelegramMessage({messageText: "/chooseDate"})
+  const {response, repliedMessage} = await sendRequestToBot({request, message: message})
+  expect(repliedMessage).toBe(step4Responses.successCommand)
+  expect(response.statusCode).toBe(200)
 }

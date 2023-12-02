@@ -12,12 +12,12 @@ export async function step2ChooseSeat(args: Step2ChooseSeatArgs) {
   const {seats, request} = args
   //step 2 - send choosed seat
   const message = generateTelegramMessage({messageText: seats[0].name})
-  const response = await sendRequestToBot({request, message})
-  console.log('step2Response2: ', response)
+  const {response, repliedMessage} = await sendRequestToBot({request, message})
   const expectedMessage = 'Супер, вы выбрали место!\n' +
-  'Вы можете выбрать желаемую дату используя команду /choose-date\n' +
-  'Вы можете выбрать продолжительность резервации используя команду /choose-duration\n'
-  expect(response.text).toBe(expectedMessage)
+  'Вы можете выбрать желаемую дату используя команду /chooseDate\n' +
+  'Вы можете выбрать продолжительность резервации используя команду /chooseDuration\n'
+  expect(repliedMessage).toBe(expectedMessage)
+  expect(response.statusCode).toBe(200)
 
     
 }
