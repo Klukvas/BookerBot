@@ -1,3 +1,4 @@
+import env from "./core/env"
 
 export const commandNames = {
     //steps
@@ -30,6 +31,7 @@ export const expectAnoutherValue = {
 }
 
 export const step4Responses = {
+    closeTimeExceeded: `Извините, мо максильманое время на бронирования - ${env.maxReservationFromHour - 1}:30.`,
     _dateRule: 'Вы не можете выбрать дату более чем на неделю вперед.',
     _minutesRule: `
         Минуты в дате должно быть или 30 или 00.\n

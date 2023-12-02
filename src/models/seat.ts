@@ -2,8 +2,6 @@ import {Schema, model} from 'mongoose'
 
 const allowedSeatTypes = process.env.ALLOWED_SEAT_TYPES?.split(' ') || ['Regual', 'Pro']
 
-console.log(allowedSeatTypes)
-
 interface ISeat{
     name: string
     type: string

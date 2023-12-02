@@ -7,23 +7,19 @@ export class SendResponseMock{
     this.spiedMessage = null
   }
   setupMock(){
-    if(this.mockedSendResponse){
-        this.spiedMessage = null
-    }else{
-        this.mockedSendResponse = jest.spyOn(sendResponseModule, 'sendResponse')
-        .mockImplementation(jest.fn(async({message, chatId, expressResp}) => {
-            expressResp.status(200).send('OK')
-            this.spiedMessage = message
-        }))
-    }
-    
+    this.spiedMessage = null
+    this.mockedSendResponse = jest.spyOn(sendResponseModule, 'sendResponse')
+    .mockImplementation(jest.fn(async({message, chatId, expressResp}) => {
+        expressResp.status(200).send('OK')
+        this.spiedMessage = message
+    }))
   }
   get message(){
-      return this.spiedMessage
+    return this.spiedMessage
   }
 
   get mock(){
-      return this.mockedSendResponse
+    return this.mockedSendResponse
   }
 }
 

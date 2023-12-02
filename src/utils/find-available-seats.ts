@@ -20,18 +20,11 @@ export async function findAvailableSeats(args: CrateSeatSuggestionArgs):Promise<
       reservedFrom: {$gte: requestFrom},
       reservedTo: {$lte: requestTo}
     })
-    console.log('requestFrom: ', requestFrom)
-    console.log('requestTo: ', requestTo)
-    console.log('reservationsBySeat: ', reservationsBySeat)
-    console.log('reservationsBySeat.length: ', reservationsBySeat.length)
-
     if(reservationsBySeat.length == 0){
       availableSeats.push(seat)
     }
     
   }
-
-  console.log('availableSeats: ', availableSeats)
 
   return availableSeats
     

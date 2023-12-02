@@ -22,6 +22,5 @@ export async function sendRequestToBot(args: SendRequestToBotArgs): Promise<Send
       .post(url)
       .send(message)
   const repliedMessage = sendResponseMock.message
-  console.log('repliedMessage :', repliedMessage)
   return {response, repliedMessage}
 }

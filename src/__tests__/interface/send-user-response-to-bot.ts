@@ -18,7 +18,7 @@ type ExpectedList = {
 
   
 export async function sendUserResponseToBot(args: SendUserResponseToBotArgs) {
-    const {request, userMessage, expectedTextList, expectedText} = args
+  const {request, userMessage, expectedTextList, expectedText} = args
   const message = generateTelegramMessage({messageText: userMessage})
   const {response, repliedMessage} = await sendRequestToBot({request, message: message})
   if(expectedText){
