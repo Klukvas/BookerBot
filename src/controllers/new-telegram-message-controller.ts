@@ -19,6 +19,7 @@ export async function newTelegramMessageController(req: Request, res: Response) 
   const chatId = message.chat.id;
   console.log('message: ', message);
   const user = await CreateUserIfNotExist(message);
+  console.log('user: ', user)
   let currentReservation = await ReservedSeats.findOne({ user: user._id, reservationFinished: false });
   console.log('currentReservation: ', currentReservation)
   if(!message?.text){
@@ -36,8 +37,10 @@ export async function newTelegramMessageController(req: Request, res: Response) 
       step: 1,
       stepFinished: true,
     });
+    console.log('created reserv: ', currentReservation)
   }
-
+  console.log('message.text: ', message.text)
+  console.log('commandNames.createReservation: ', commandNames.createReservation)
   switch (message.text) {
 
     case commandNames.start:
@@ -49,6 +52,7 @@ export async function newTelegramMessageController(req: Request, res: Response) 
       break;
 
     case commandNames.createReservation:
+      console.log('start createReservation')
       await createReservation({ user, res, chatId });
       break;
 

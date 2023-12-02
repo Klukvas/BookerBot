@@ -13,9 +13,11 @@ type CreateReservationCommandArgs = {
 
 export async function createReservation({user, res, chatId}: CreateReservationCommandArgs) {
   // Remove expired reservations
+  console.log('here 16')
   await ReservedSeats.deleteMany({ user: user._id, reservedTo: { $lte: new Date() }, reservationFinished: true });
 
   // Get all "active" reservations
+  console.log('here 19')
   const finishedReservations = await ReservedSeats.find({ user: user._id, reservationFinished: true });
 
   // User should not have more than X active reservations
@@ -32,6 +34,7 @@ export async function createReservation({user, res, chatId}: CreateReservationCo
     step: 1,
     stepFinished: true,
   });
+  console.log('sendResponse next: ', sendResponse)
   await sendResponse({message: step1Responses.success, chatId, expressResp: res})
   // res.status(200).send(step1Responses.success);
 }

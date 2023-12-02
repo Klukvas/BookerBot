@@ -8,7 +8,7 @@ type GenerateTelegramMessageArgs = {
 
 export function generateTelegramMessage(args: GenerateTelegramMessageArgs = {}){
   const {
-    messageText = '/create-reservation',
+    messageText = '/createReservation',
     userId = 1233210,
     chatId = 1233210
   } = args
