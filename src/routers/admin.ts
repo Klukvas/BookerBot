@@ -1,12 +1,17 @@
 import express, { Request, Response, Router } from 'express'
-import adminController from '../controllers/admin-controller'
 import AdminController from '../controllers/admin-controller'
+import { sessionChecker } from '../middlewares/session-checker'
 
 const adminRouter = express.Router()
-adminRouter.get('/', AdminController.getCurrentReservations)
-adminRouter.get('/createSeat', AdminController.getCreateNewSeatForm)
+
+adminRouter.get('/', sessionChecker, AdminController.getCurrentReservations)
+adminRouter.get('/createSeat', sessionChecker, AdminController.getCreateNewSeatForm)
+adminRouter.get('/login', AdminController.getLoginForm)
+
 adminRouter.post('/createSeat', AdminController.createNewSeat)
+adminRouter.post('/login', AdminController.login)
 adminRouter.post('/deleteSeat', AdminController.deleteSeat)
+
 
 export default adminRouter
 

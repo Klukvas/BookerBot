@@ -8,6 +8,7 @@ class Env{
   protected readonly _port: string
   protected readonly _botToken: string
   protected readonly _maxReservationFromHour: number
+  protected readonly _userHardToken: string
   
   constructor(){
     dotenv.config();
@@ -18,6 +19,13 @@ class Env{
     this._port = process.env.PORT || '3000'
     this._botToken = process.env.TELEGRAM_API_TOKEN || ''
     this._maxReservationFromHour = Number(process.env.MAX_RESERVATION_FROM_HOUR) || 20
+    this._userHardToken = process.env.HARD_USER_TOKEN || ''
+  }
+  get userHardToken(){
+    if(!this._userHardToken){
+      throw new Error('User hard token could not be empty')
+    }
+    return this._userHardToken
   }
 
   get maxReservationFromHour(){return this._maxReservationFromHour}

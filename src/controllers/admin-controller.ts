@@ -1,9 +1,12 @@
 import { Request, Response } from "express";
 import { Seat } from "../models";
 import { ObjectId } from "mongodb";
+import env from "../utils/core/env";
+import * as bcrypt from 'bcrypt';
 
 class AdminController{
-  static getCurrentReservations(req: Request, res: Response){
+
+  static async getCurrentReservations(req: Request, res: Response){
     const reservations = [
       {
         id: 12,
@@ -26,6 +29,21 @@ class AdminController{
     res.render('create-seat', {seatData: allSeats});
   }
 
+  static async getLoginForm(req: Request, res: Response){
+    res.render('login', {errorMessage: ''});
+  }
+
+  static async login(req: Request, res: Response){
+    const { token } = req.body;
+    if(token!==env.userHardToken){
+      res.render('login', {errorMessage: 'Wrong token'});
+    }else{
+      const hashedToken = await bcrypt.hash(token, 10);
+      req.session.token = hashedToken
+      res.redirect('/admin')
+    }
+  }
+
   static async createNewSeat(req: Request, res: Response){
     const { name, type, cost } = req.body;
     if(type){
@@ -36,6 +54,7 @@ class AdminController{
     const allSeats = await Seat.find({})
     res.render('create-seat', { seatData: allSeats });
   }
+  
   static async deleteSeat(req: Request, res: Response) {
     try {
       const { deleteId } = req.body;
