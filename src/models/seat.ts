@@ -15,7 +15,8 @@ const seatSchema = new Schema<ISeat>({
     },
     type: {
         type: String, 
-        required: true, 
+        required: true,
+        default: 'Regual'
     },
     cost: { type: Number, required: true }
 });

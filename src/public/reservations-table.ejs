@@ -1,0 +1,38 @@
+<!-- views/table.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservation Table</title>
+    <link rel="stylesheet" type="text/css" href="/styles/reservations-table.css">
+</head>
+
+<body>
+    <%- include('header.ejs') %>
+    <h2>Reservation Table</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Reserved For</th>
+                <th>Reserved Until</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% reservations.forEach(reservation => { %>
+                <tr>
+                    <td><%= reservation.id %></td>
+                    <td><%= reservation.reservedFor %></td>
+                    <td><%= reservation.reservedUntil %></td>
+                    <td><%= reservation.amount %></td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+</body>
+
+</html>
