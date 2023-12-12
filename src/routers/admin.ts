@@ -6,6 +6,7 @@ const adminRouter = express.Router()
 adminRouter.get('/', AdminController.getCurrentReservations)
 adminRouter.get('/createSeat', AdminController.getCreateNewSeatForm)
 adminRouter.post('/createSeat', AdminController.createNewSeat)
+adminRouter.post('/deleteSeat', AdminController.deleteSeat)
 
 export default adminRouter
 
