@@ -1,6 +1,6 @@
 import {Schema, model} from 'mongoose'
 
-const allowedSeatTypes = process.env.ALLOWED_SEAT_TYPES?.split(' ') || ['Regual', 'Pro']
+// const allowedSeatTypes = process.env.ALLOWED_SEAT_TYPES?.split(' ') || ['Regual', 'Pro']
 
 interface ISeat{
     name: string
@@ -25,9 +25,9 @@ seatSchema.pre('validate', function(next){
     if(typeof(this.name) !== 'string'){
         next(new Error('Name should be a string value'))
     }
-    else if(!allowedSeatTypes.includes(this.type) || typeof(this.type) !== 'string'){
-        next(new Error(`Type field should be on of [${allowedSeatTypes}]`))
-    }
+    // else if(!allowedSeatTypes.includes(this.type) || typeof(this.type) !== 'string'){
+    //     next(new Error(`Type field should be on of [${allowedSeatTypes}]`))
+    // }
     else if(typeof(this.cost) != 'number'){
         next(new Error('Cost field should be a number'))
     }
