@@ -13,11 +13,16 @@ import { approveReservatiom } from "../views/commands/approve-reservation";
 import { activeReservations } from "../views/commands/active-reservations";
 import { sendResponse } from "../utils/send-response";
 import { Message } from "../types/new-message";
+import { appLogger } from "../utils/core/logger";
 
 export async function newTelegramMessageController(req: Request, res: Response) {
-  const { message }  = req.body;
-  // console.log('message: ', message)
-  const chatId = message.chat.id;
+  const { message, edited_message }  = req.body;
+  if(edited_message) {
+    res.status(200).send('ok')
+    return
+  }
+  appLogger.info(`message: ${message}`)
+  const chatId = message?.chat?.id;
   const user = await CreateUserIfNotExist(message);
   let currentReservation = await ReservedSeats.findOne({ user: user._id, reservationFinished: false });
   if(!message?.text){
