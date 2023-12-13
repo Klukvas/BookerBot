@@ -1,26 +1,34 @@
 import { Request, Response } from "express";
-import { Seat } from "../models";
+import { ReservedSeats, Seat } from "../models";
 import { ObjectId } from "mongodb";
 import env from "../utils/core/env";
 import * as bcrypt from 'bcrypt';
+import { appLogger } from "../utils/core/logger";
+import { dateToMoment } from "../utils/date-to-moment";
+import { User } from "../models/user";
 
 class AdminController{
 
   static async getCurrentReservations(req: Request, res: Response){
-    const reservations = [
-      {
-        id: 12,
-        reservedFor: 'asd',
-        reservedUntil: 'sad',
-        amount: 122
-      },
-      {
-        id: 123,
-        reservedFor: 'asd',
-        reservedUntil: 'sad',
-        amount: 12
+    const rawReservations = await ReservedSeats.find({})
+    const reservations = []
+    for(const item of rawReservations){
+      const seatName = (await Seat.findOne({_id: item.seatId}))?.name
+      const rawUser = await User.findOne({_id: item.user})
+      const user = rawUser?.username || rawUser?.lastName || rawUser?.first_name
+      const prettyReservedFrom = item.reservedFrom ? dateToMoment(item.reservedFrom) : "не выбрано"
+      const prettyReservedTo = item.reservedTo ? dateToMoment(item.reservedTo) : "не выбрано"
+      const prettyReservation = {
+        id: item._id,
+        reservedFrom: prettyReservedFrom,
+        reservedTo: prettyReservedTo,
+        totalAmountToPay: item.totalAmountToPay,
+        seat: seatName || "не выбрано",
+        user: user || "неизвестный",
       }
-    ]
+      reservations.push(prettyReservation)
+    }
+    appLogger.info(`reservations: ${reservations}`)
     res.render('reservations-table', { reservations });
   }
 

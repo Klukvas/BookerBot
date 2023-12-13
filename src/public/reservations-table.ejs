@@ -17,18 +17,22 @@
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Reserved For</th>
-                <th>Reserved Until</th>
+                <th>Reserved from</th>
+                <th>Reserved to</th>
                 <th>Amount</th>
+                <th>Seat name</th>
+                <th>User</th>
             </tr>
         </thead>
         <tbody>
             <% reservations.forEach(reservation => { %>
                 <tr>
                     <td><%= reservation.id %></td>
-                    <td><%= reservation.reservedFor %></td>
-                    <td><%= reservation.reservedUntil %></td>
-                    <td><%= reservation.amount %></td>
+                    <td><%= reservation.reservedFrom %></td>
+                    <td><%= reservation.reservedTo %></td>
+                    <td><%= reservation.totalAmountToPay %></td>
+                    <td><%= reservation.seat %></td>
+                    <td><%= reservation.user %></td>
                 </tr>
             <% }); %>
         </tbody>
