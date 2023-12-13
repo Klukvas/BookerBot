@@ -7,7 +7,8 @@ import adminRouter from "../../routers/admin";
 import bodyParser from "body-parser"
 import sessions from 'express-session'
 import cookieParser from 'cookie-parser'
-import morgan from 'morgan'
+import { httpLogger } from "../../middlewares/logger-middleware";
+import { appLogger } from "./logger";
 
 class App{
   
@@ -24,7 +25,7 @@ class App{
     this.app.use(bodyParser.json());
     this.app.use(express.urlencoded({ extended: true }));
     
-    this.app.use(morgan('combined'))
+    this.app.use(httpLogger)
 
     this.app.use(cookieParser());
     this.app.use(sessions({
@@ -44,7 +45,7 @@ class App{
 
   listen(){
     this.app.listen(this.env.port, async () => {
-      console.log(`App is running at http://localhost:${this.env.port}`);
+      appLogger.info(`App is running at http://localhost:${this.env.port}`);
       await connectToDb();
     });
   }

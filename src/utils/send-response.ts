@@ -1,6 +1,8 @@
 import axios from "axios"
 import env from "./core/env"
 import { Response } from "express"
+import { error } from "console"
+import { appLogger } from "./core/logger"
 
 type SendResponseArgs = {
   message: string
@@ -10,6 +12,11 @@ type SendResponseArgs = {
 
 export async function sendResponse({message, chatId, expressResp}: SendResponseArgs) {
   const url = `https://api.telegram.org/bot${env.botToken}/sendMessage?&chat_id=${chatId}&text=${encodeURIComponent(message)}`
-  await axios.get(url)
+  try{
+    await axios.get(url)
+  }catch(err){
+    appLogger.error(`Could not send request to bot with error: ${err}`)
+  }
+  
   expressResp.status(200).contentType('text').send('OK')
 }
