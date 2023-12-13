@@ -1,5 +1,6 @@
 import { ReservedSeats } from "../models";
 import { IUser } from "../models/user";
+import { reservationFormatterBot } from "./formatters/reservation-formatter-bot";
 import { nextStepMessages } from "./response-messages";
 
 
@@ -22,7 +23,8 @@ export async function getNextSteps(user: IUser) {
     nextSteps += nextStepMessages.pickDuration
   }
   if(nextSteps === ''){
-    nextSteps += nextStepMessages.noStepsLeft + `${reservedSeat}`
+    const prettyReservations = await reservationFormatterBot([reservedSeat])
+    nextSteps += nextStepMessages.noStepsLeft + `${prettyReservations}`
   }
 
   return nextSteps

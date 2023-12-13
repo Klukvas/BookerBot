@@ -3,7 +3,7 @@ import { ReservedSeats } from "../../models";
 import { IUser } from "../../models/user";
 import { sendResponse } from "../../utils/send-response";
 import { activeReservationsResponse } from "../../utils/response-messages";
-import { reservationFormatter } from "../../utils/formatters/reservation-formatter";
+import { reservationFormatterBot } from "../../utils/formatters/reservation-formatter-bot";
 
 type ActiveReservationsArgs = {
   user: IUser
@@ -14,7 +14,7 @@ type ActiveReservationsArgs = {
 export async function activeReservations({user, res, chatId}: ActiveReservationsArgs) {
     const reservations = await ReservedSeats.find({user: user._id, reservationFinished: true})
     if(reservations.length >= 1){
-      const formattedReservations = await reservationFormatter(reservations)
+      const formattedReservations = await reservationFormatterBot(reservations)
       await sendResponse({
         message: `${activeReservationsResponse.listOfReservations}${formattedReservations}`,
         expressResp: res,

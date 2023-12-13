@@ -6,6 +6,7 @@ import * as bcrypt from 'bcrypt';
 import { appLogger } from "../utils/core/logger";
 import { dateToMoment } from "../utils/date-to-moment";
 import { User } from "../models/user";
+import { reservationFormatterAdmin } from "../utils/formatters/reservation-formatter-admin";
 
 class AdminController{
 
@@ -13,23 +14,7 @@ class AdminController{
     const rawReservations = await ReservedSeats.find({})
     const reservations = []
     for(const item of rawReservations){
-      const seatName = (await Seat.findOne({_id: item.seatId}))?.name
-      const rawUser = await User.findOne({_id: item.user})
-      const user = rawUser?.username || rawUser?.lastName || rawUser?.first_name
-      const prettyReservedFrom = item.reservedFrom ? 
-        dateToMoment(item.reservedFrom).format('DD/MM/YY HH:mm') : 
-        "не выбрано"
-      const prettyReservedTo = item.reservedTo ? 
-        dateToMoment(item.reservedTo).format('DD/MM/YY HH:mm') : 
-        "не выбрано"
-      const prettyReservation = {
-        id: item._id,
-        reservedFrom: prettyReservedFrom,
-        reservedTo: prettyReservedTo,
-        totalAmountToPay: item.totalAmountToPay,
-        seat: seatName || "не выбрано",
-        user: user || "неизвестный",
-      }
+      const prettyReservation = await reservationFormatterAdmin(item)
       reservations.push(prettyReservation)
     }
     appLogger.info(`reservations: ${reservations}`)

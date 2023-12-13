@@ -1,7 +1,7 @@
 import { IReserved, Seat } from "../../models";
 import { calculatePrice } from "../calculate-price";
 
-export async function reservationFormatter(reservations: IReserved[]){
+export async function reservationFormatterBot(reservations: IReserved[]){
   let formattedText = ''
   let delimiter = '-'.repeat(12)
   for(const item of reservations){
