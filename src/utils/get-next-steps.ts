@@ -1,6 +1,6 @@
 import { ReservedSeats } from "../models";
 import { IUser } from "../models/user";
-import { commandNames, nextStepMessages } from "./response-messages";
+import { nextStepMessages } from "./response-messages";
 
 
 

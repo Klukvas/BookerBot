@@ -1,8 +1,9 @@
 import { Response } from "express";
-import { IReserved, ReservedSeats } from "../../models";
+import { IReserved, ReservedSeats, Seat } from "../../models";
 import { IUser } from "../../models/user";
 import { responseMessages } from "../../utils/response-messages";
 import { sendResponse } from "../../utils/send-response";
+import { calculatePrice } from "../../utils/calculate-price";
 
 type ApproveReservationArgs = {
   currentReservation: IReserved | null
@@ -37,7 +38,23 @@ export async function approveReservatiom({currentReservation, user, res, chatId}
       })
       // res.send(responseMessages.sameReservationFinished)
     }else{
-      await ReservedSeats.updateOne({_id: currentReservation._id}, {$set: {reservationFinished: true}})
+      // first -> set reservation as finished
+      await ReservedSeats.updateOne(
+        {_id: currentReservation._id}, 
+        {$set: {
+          reservationFinished: true
+        }}
+      )
+      // then -> update its amount
+      const reservation = await ReservedSeats.findOne({_id: currentReservation._id})
+      const reservedSeat = await Seat.findOne({_id: reservation!.seatId})
+      const totalPrice = calculatePrice({duration: reservation!.duration, price: reservedSeat!.cost})
+      await ReservedSeats.updateOne(
+        {_id: currentReservation._id}, 
+        {$set: {
+          totalAmountToPay: totalPrice
+        }}
+      )
       await sendResponse({
         message: responseMessages.reservationFinished,
         expressResp: res,

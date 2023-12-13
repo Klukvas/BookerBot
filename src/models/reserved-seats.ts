@@ -11,6 +11,8 @@ interface IReserved extends Document {
   seatId: mongoose.Schema.Types.ObjectId
   user: mongoose.Schema.Types.ObjectId
 
+  totalAmountToPay: number
+
   step: number
   stepFinished: boolean
 
@@ -38,6 +40,8 @@ const ReservedSeatsSchema = new mongoose.Schema<IReserved>({
     },
   },
   duration: { type: String },
+
+  totalAmountToPay: {type: Number},
 
   seatId: { type: mongoose.Schema.Types.ObjectId, ref: 'Place', index: true },
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
