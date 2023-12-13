@@ -42,7 +42,8 @@ export async function approveReservatiom({currentReservation, user, res, chatId}
       await ReservedSeats.updateOne(
         {_id: currentReservation._id}, 
         {$set: {
-          reservationFinished: true
+          reservationFinished: true,
+          stepFinished: true
         }}
       )
       // then -> update its amount
