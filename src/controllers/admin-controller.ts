@@ -16,8 +16,12 @@ class AdminController{
       const seatName = (await Seat.findOne({_id: item.seatId}))?.name
       const rawUser = await User.findOne({_id: item.user})
       const user = rawUser?.username || rawUser?.lastName || rawUser?.first_name
-      const prettyReservedFrom = item.reservedFrom ? dateToMoment(item.reservedFrom) : "не выбрано"
-      const prettyReservedTo = item.reservedTo ? dateToMoment(item.reservedTo) : "не выбрано"
+      const prettyReservedFrom = item.reservedFrom ? 
+        dateToMoment(item.reservedFrom).format('DD/MM/YY HH:mm') : 
+        "не выбрано"
+      const prettyReservedTo = item.reservedTo ? 
+        dateToMoment(item.reservedTo).format('DD/MM/YY HH:mm') : 
+        "не выбрано"
       const prettyReservation = {
         id: item._id,
         reservedFrom: prettyReservedFrom,
