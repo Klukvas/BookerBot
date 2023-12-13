@@ -1,9 +1,10 @@
 import { Response } from "express";
 import { IReserved, ReservedSeats, Seat } from "../../models";
-import { IUser } from "../../models/user";
+import { IUser, User } from "../../models/user";
 import { responseMessages } from "../../utils/response-messages";
 import { sendResponse } from "../../utils/send-response";
 import { calculatePrice } from "../../utils/calculate-price";
+import { getNextSteps } from "../../utils/get-next-steps";
 
 type ApproveReservationArgs = {
   currentReservation: IReserved | null
@@ -21,6 +22,18 @@ export async function approveReservatiom({currentReservation, user, res, chatId}
     })
     // res.send(responseMessages.reservationNotFound)
   }else{
+
+    if(!currentReservation.reservedFrom || !currentReservation.seatId || !currentReservation.duration){
+      // todo: fix it
+      const nextSteps = await getNextSteps(undefined, currentReservation)
+      await sendResponse({
+        message: `${responseMessages.reservationNotReadyForApprove} ${nextSteps}`,
+        expressResp: res,
+        chatId
+      })
+    }
+
+
     // check if time is not taken
     const sameReservations = await ReservedSeats.find({
       user: {$ne: currentReservation.user},
