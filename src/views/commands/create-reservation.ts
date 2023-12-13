@@ -32,6 +32,12 @@ export async function createReservation({user, res, chatId}: CreateReservationCo
     step: 1,
     stepFinished: true,
   });
-  await sendResponse({message: step1Responses.success, chatId, expressResp: res})
+  const keyboard = {
+    inline_keyboard: [
+      [{ text: 'Button 1', callback_data: 'button1' }],
+      [{ text: 'Button 2', callback_data: 'button2' }],
+    ],
+  };
+  await sendResponse({message: step1Responses.success, chatId, expressResp: res, reply_markup: keyboard})
   // res.status(200).send(step1Responses.success);
 }
