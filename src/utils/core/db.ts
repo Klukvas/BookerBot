@@ -5,7 +5,7 @@ import { appLogger } from "./logger";
 
 async function connectToDb() {
   const db_url = `${env.dbUrl}/${env.dbName}`
-  appLogger.debug(`db_url: ${db_url}`)
+  appLogger.info(`db_url: ${db_url}`)
   await mongoose.connect(db_url)
   const db = mongoose.connection;
 
