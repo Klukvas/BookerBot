@@ -1,14 +1,13 @@
 import express, { Express } from "express";
 import Env from './env';
 import telegramNewMessageRouter from '../../routers/telegram'
-import logger from './logger'
 import connectToDb from "./db";
 import path from "path";
 import adminRouter from "../../routers/admin";
 import bodyParser from "body-parser"
 import sessions from 'express-session'
 import cookieParser from 'cookie-parser'
-
+import morgan from 'morgan'
 
 class App{
   
@@ -25,6 +24,8 @@ class App{
     this.app.use(bodyParser.json());
     this.app.use(express.urlencoded({ extended: true }));
     
+    this.app.use(morgan('combined'))
+
     this.app.use(cookieParser());
     this.app.use(sessions({
       secret: "thisismysecrctekey",
@@ -43,7 +44,7 @@ class App{
 
   listen(){
     this.app.listen(this.env.port, async () => {
-      logger.info(`App is running at http://localhost:${this.env.port}`);
+      console.log(`App is running at http://localhost:${this.env.port}`);
       await connectToDb();
     });
   }
