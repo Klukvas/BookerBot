@@ -11,9 +11,14 @@ type SendResponseArgs = {
 }
 
 export async function sendResponse({message, chatId, expressResp}: SendResponseArgs) {
-  const url = `https://api.telegram.org/bot${env.botToken}/sendMessage?&chat_id=${chatId}&text=${encodeURIComponent(message)}`
+  // const url = `https://api.telegram.org/bot${env.botToken}/sendMessage?&chat_id=${chatId}&text=${encodeURIComponent(message)}`
+  const url = `https://api.telegram.org/bot${env.botToken}/sendMessage`
   try{
-    await axios.get(url)
+    // await axios.get(url)
+    await axios.post(url, {
+      chat_id: chatId,
+      text: message,
+    })
   }catch(err){
     appLogger.error(`Could not send request to bot with error: ${err}`)
   }
