@@ -40,7 +40,6 @@ export async function getNextSteps(user?: IUser, reservation?:IReserved) {
     const prettyReservations = await reservationFormatterBot([reservedSeat])
     nextSteps += nextStepMessages.noStepsLeft + `${prettyReservations}`
   }
-  appLogger.info(`keyboard: ${JSON.stringify(keyboard)}`)
+  console.log(`keyboard: ${JSON.stringify(keyboard)}`)
   return {nextSteps, keyboard}
-    
 }

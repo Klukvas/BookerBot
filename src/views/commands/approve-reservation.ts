@@ -13,7 +13,7 @@ type ApproveReservationArgs = {
   chatId: number
 };
 
-export async function approveReservatiom({currentReservation, user, res, chatId}: ApproveReservationArgs) {
+export async function approveReservation({currentReservation, user, res, chatId}: ApproveReservationArgs) {
   if(!currentReservation){
     await sendResponse({
       message: responseMessages.reservationNotFound,

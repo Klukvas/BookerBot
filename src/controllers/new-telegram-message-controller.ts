@@ -9,11 +9,12 @@ import { CreateUserIfNotExist } from "../views/CreateUserIfNotExist";
 import { step3 } from "../views/steps/step3";
 import { step2 } from "../views/steps/step2";
 import { step4 } from "../views/steps/step4";
-import { approveReservatiom } from "../views/commands/approve-reservation";
+import { approveReservation } from "../views/commands/approve-reservation";
 import { activeReservations } from "../views/commands/active-reservations";
 import { sendResponse } from "../utils/send-response";
 import { Message } from "../types/new-message";
 import { appLogger } from "../core/logger";
+import { createReservationIfNotExist } from "../views/create-reservation-if-not-exist";
 
 export async function newTelegramMessageController(req: Request, res: Response) {
   const { message, edited_message }  = req.body;
@@ -33,19 +34,6 @@ export async function newTelegramMessageController(req: Request, res: Response) 
     })
     return
   }
-
-  // list of commands under which we do not create a reservation
-  const additionalCommands = [
-    commandNames.help, commandNames.approveReservation, commandNames.activeReservations, commandNames.start
-  ]
-
-  if (!currentReservation && !additionalCommands.includes(message.text)) {
-    currentReservation = await ReservedSeats.create({
-      user: user._id,
-      step: 1,
-      stepFinished: true,
-    });
-  }
   switch (message.text) {
 
     case commandNames.start:
@@ -61,14 +49,17 @@ export async function newTelegramMessageController(req: Request, res: Response) 
       break;
 
     case commandNames.chooseDuration:
+      await createReservationIfNotExist({user, step: 3})
       await chooseDuration({ currentReservation, user, res, chatId });
       break;
 
     case commandNames.chooseSeat:
+      await createReservationIfNotExist({user, step: 2})
       await chooseSeat({ user, currentReservation, res, chatId });
       break;
 
     case commandNames.chooseDate:
+      await createReservationIfNotExist({user, step: 4})
       await chooseDate({ user, currentReservation, res, chatId });
       break;
 
@@ -77,7 +68,7 @@ export async function newTelegramMessageController(req: Request, res: Response) 
       break;
 
     case commandNames.approveReservation:
-      await approveReservatiom({ user, currentReservation, res, chatId });
+      await approveReservation({ user, currentReservation, res, chatId });
       break;
 
     case commandNames.activeReservations:
