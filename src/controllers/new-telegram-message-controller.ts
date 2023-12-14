@@ -21,7 +21,7 @@ export async function newTelegramMessageController(req: Request, res: Response) 
     res.status(200).send('ok')
     return
   }
-  appLogger.info(`message: ${message}`)
+  appLogger.info(`message: ${JSON.stringify(message)}`)
   const chatId = message?.chat?.id;
   const user = await CreateUserIfNotExist(message);
   let currentReservation = await ReservedSeats.findOne({ user: user._id, reservationFinished: false });
