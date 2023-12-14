@@ -1,4 +1,4 @@
-import env from "./core/env";
+import env from "../core/env";
 
 export function validateDuration(timeString: string) {
   const [hoursStr, minutesStr] = timeString.split(':');

@@ -2,7 +2,7 @@ import { Response } from "express";
 import { ReservedSeats } from "../../models";
 import { IUser } from "../../models/user";
 import { step1Responses } from "../../utils/response-messages";
-import env from "../../utils/core/env";
+import env from "../../core/env";
 import { sendResponse } from "../../utils/send-response";
 
 type CreateReservationCommandArgs = {

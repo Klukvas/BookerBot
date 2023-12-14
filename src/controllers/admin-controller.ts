@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import { ReservedSeats, Seat } from "../models";
 import { ObjectId } from "mongodb";
-import env from "../utils/core/env";
+import env from "../core/env";
 import * as bcrypt from 'bcrypt';
-import { appLogger } from "../utils/core/logger";
+import { appLogger } from "../core/logger";
 import { dateToMoment } from "../utils/date-to-moment";
 import { User } from "../models/user";
 import { reservationFormatterAdmin } from "../utils/formatters/reservation-formatter-admin";

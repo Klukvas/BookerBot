@@ -1,4 +1,4 @@
-import env from "./core/env"
+import env from "../core/env"
 
 export const commandNames = {
     //steps

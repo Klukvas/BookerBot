@@ -35,11 +35,12 @@ export async function step3(args: Step3Args) {
         {user: user._id},
         { $set: updateObj }
       )
-      const nextSteps = await getNextSteps(user)
+      const {nextSteps, keyboard} = await getNextSteps(user)
       await sendResponse({
         message: `${step3Responses.success}${nextSteps}`,
         expressResp: res,
-        chatId: message.chat.id
+        chatId: message.chat.id,
+        reply_markup: keyboard
       })
       // res.status(200).send(`${step3Responses.success}${nextSteps}`)
     }else{

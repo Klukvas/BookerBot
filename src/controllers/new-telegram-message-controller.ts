@@ -13,7 +13,7 @@ import { approveReservatiom } from "../views/commands/approve-reservation";
 import { activeReservations } from "../views/commands/active-reservations";
 import { sendResponse } from "../utils/send-response";
 import { Message } from "../types/new-message";
-import { appLogger } from "../utils/core/logger";
+import { appLogger } from "../core/logger";
 
 export async function newTelegramMessageController(req: Request, res: Response) {
   const { message, edited_message }  = req.body;

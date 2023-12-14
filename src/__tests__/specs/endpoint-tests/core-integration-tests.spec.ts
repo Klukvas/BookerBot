@@ -1,5 +1,5 @@
 import supertest from "supertest";
-import App from "../../../utils/core/server";
+import App from "../../../core/server";
 import mongoose from "mongoose";
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { step1StartNewReservation } from "../../interface/step-1-start-new-reservation";

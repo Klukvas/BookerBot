@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { SessionData } from 'express-session';
 import * as bcrypt from 'bcrypt';
-import env from '../utils/core/env';
+import env from '../core/env';
 
 interface CustomSession extends SessionData {
   token: string;

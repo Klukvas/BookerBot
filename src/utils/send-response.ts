@@ -1,7 +1,7 @@
 import axios from "axios";
-import env from "./core/env";
+import env from "../core/env";
 import { Response } from "express";
-import { appLogger } from "./core/logger";
+import { appLogger } from "../core/logger";
 
 type SendResponseArgs = {
   message: string;
