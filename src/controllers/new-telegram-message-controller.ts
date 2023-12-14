@@ -34,7 +34,12 @@ export async function newTelegramMessageController(req: Request, res: Response) 
     return
   }
 
-  if (!currentReservation) {
+  // list of commands under which we do not create a reservation
+  const additionalCommands = [
+    commandNames.help, commandNames.approveReservation, commandNames.activeReservations, commandNames.start
+  ]
+
+  if (!currentReservation && !additionalCommands.includes(message.text)) {
     currentReservation = await ReservedSeats.create({
       user: user._id,
       step: 1,
@@ -80,11 +85,11 @@ export async function newTelegramMessageController(req: Request, res: Response) 
       break;
 
     default:
-      if (currentReservation.step == 3 && !currentReservation.stepFinished) {
+      if (currentReservation?.step == 3 && !currentReservation.stepFinished) {
         await step3({ message , user, res, currentReservation });
-      } else if (currentReservation.step == 2 && !currentReservation.stepFinished) {
+      } else if (currentReservation?.step == 2 && !currentReservation.stepFinished) {
         await step2({ message, user, res });
-      } else if (currentReservation.step == 4 && !currentReservation.stepFinished) {
+      } else if (currentReservation?.step == 4 && !currentReservation.stepFinished) {
         await step4({ message, user, res, currentReservation });
       }else{
         await sendResponse({
