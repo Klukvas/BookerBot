@@ -1,1 +1,2 @@
-1. Use createReservationIfNotExist in chooseDuration/seat ... not in switch
+1. ✅ Use createReservationIfNotExist in chooseDuration/seat ... not in switch
+2. seatNumber should be uniq

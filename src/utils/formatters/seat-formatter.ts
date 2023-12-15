@@ -6,7 +6,7 @@ export function seatFormatter(seats: ISeat[]){
   for(const item of seats){
       const formattedSeat = `
           ${delimeter}\n
-          Имя: ${item.name}\n
+          Имя: ${item.seatNumber}\n
           Цена в час: ${item.cost}\n
           Тип: ${item.type}\n
       `

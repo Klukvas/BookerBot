@@ -11,7 +11,7 @@ type Step2ChooseSeatArgs = {
 export async function step2ChooseSeat(args: Step2ChooseSeatArgs) {
   const {seats, request} = args
   //step 2 - send choosed seat
-  const message = generateTelegramMessage({messageText: seats[0].name})
+  const message = generateTelegramMessage({messageText: `${seats[0].seatNumber}`})
   const {response, repliedMessage} = await sendRequestToBot({request, message})
   const expectedMessage = 'Супер, вы выбрали место!\n' +
   'Вы можете выбрать желаемую дату используя команду /chooseDate\n' +

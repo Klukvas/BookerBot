@@ -106,7 +106,8 @@ export const nextStepMessages = {
     pickDate: `Вы можете выбрать желаемую дату используя команду ${commandNames.chooseDate}\n`,
     pickSeat: `Вы можете выбрать желаемое место используя команду ${commandNames.chooseSeat}}\n`,
     pickDuration: `Вы можете выбрать продолжительность резервации используя команду ${commandNames.chooseDuration}\n`,
-    noStepsLeft: `Осталось лишь подтвердить вашу резервацию. Для этого используйте команду ${commandNames.approveReservation}\nДанные о резервации: `
+    noStepsLeft: `Осталось лишь подтвердить вашу резервацию.\nДанные о резервации: `
+    // noStepsLeft: `Осталось лишь подтвердить вашу резервацию. Для этого используйте команду ${commandNames.approveReservation}\nДанные о резервации: `
 }
 
 export const responseMessages = {

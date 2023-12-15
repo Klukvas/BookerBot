@@ -15,9 +15,17 @@ type Step2Args = {
 
 export async function step2(args: Step2Args) {
   const {message, user, res} = args
-  const selectedSeat = await Seat.findOne({
-    name: { $regex: new RegExp(`^${message.text.trim()}$`, 'i') }
-  });
+  let searchedSeatNumber
+  try{
+    searchedSeatNumber = Number(message.text.trim())
+  }catch(err){
+    await sendResponse({
+      message: step2Responses.seatNotFound,
+      chatId: message.chat.id,
+      expressResp: res
+    })
+  }
+  const selectedSeat = await Seat.findOne({seatNumber: searchedSeatNumber});
   
   if(!selectedSeat){
     await sendResponse({
