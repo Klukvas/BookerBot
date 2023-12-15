@@ -40,6 +40,11 @@ export async function newTelegramMessageController(req: Request, res: Response) 
     return
   }
   let reservation;
+  /**
+   * We must to create reservation(if it is not exist) only for commands related to 
+   * reservation change.
+   * List of those commands: [ chooseDuration, chooseSeat, chooseDate ]
+   */
   switch (message.text) {
 
     case commandNames.start:

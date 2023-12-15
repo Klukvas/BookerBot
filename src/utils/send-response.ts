@@ -24,7 +24,7 @@ export async function sendResponse({
     text: message,
     reply_markup: reply_markup
   };
-
+  logger.debug(`Response body: ${params}`)
   try {
     await axios.post(url, params);
   } catch (err) {

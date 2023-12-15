@@ -13,6 +13,7 @@ export async function getNextSteps(user?: IUser, reservation?:IReserved) {
     keyboard: Array(),
     one_time_keyboard: true
   }
+  const keyboardButtons = Array()
   let reservedSeat
   if(!reservation){
     reservedSeat = await ReservedSeats.findOne({user: user!._id, reservationFinished: false})
@@ -26,21 +27,21 @@ export async function getNextSteps(user?: IUser, reservation?:IReserved) {
 
   if(!reservedSeat.reservedFrom){
     nextSteps += nextStepMessages.pickDate
-    keyboard.keyboard.push([{ text: '📅 Выберите дату', callback_data: commandNames.chooseDate }])
+    keyboardButtons.push({ text: '📅 Выберать дату', callback_data: commandNames.chooseDate })
   }
   if(!reservedSeat.seatId){
     nextSteps += nextStepMessages.pickSeat
-    keyboard.keyboard.push([{ text: '💺 Выьерите место', callback_data: commandNames.chooseSeat }])
+    keyboardButtons.push({ text: '💺 Выбрать место', callback_data: commandNames.chooseSeat })
   }
   if(!reservedSeat.duration){
     nextSteps += nextStepMessages.pickDuration
-    keyboard.keyboard.push([{ text: '⏰ Выберите продолжительность', callback_data: commandNames.chooseDuration }])
+    keyboardButtons.push({ text: '⏰ Выбрать продолжительность', callback_data: commandNames.chooseDuration })
   }
   if(nextSteps === ''){
     const prettyReservations = await reservationFormatterBot([reservedSeat])
     nextSteps += nextStepMessages.noStepsLeft + `${prettyReservations}`
   }
-  console.log(`keyboard: ${JSON.stringify(keyboard)}`)
+  keyboard.keyboard.push(keyboardButtons)
   logger.debug(`keyboard: ${JSON.stringify(keyboard)}`)
   return {nextSteps, keyboard}
 }
