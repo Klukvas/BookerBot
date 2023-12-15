@@ -11,7 +11,8 @@ export async function getNextSteps(user?: IUser, reservation?:IReserved) {
   let nextSteps = ''
   const keyboard = {
     keyboard: Array(),
-    one_time_keyboard: true
+    one_time_keyboard: true,
+    input_field_placeholder: "input_field_placeholder"
   }
   let reservedSeat
   if(!reservation){
