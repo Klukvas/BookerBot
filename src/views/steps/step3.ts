@@ -31,16 +31,17 @@ export async function step3(args: Step3Args) {
         )
         updateObj['reservedTo'] = reservedTo
       }
-      await ReservedSeats.updateOne(
+      const reservaion = await ReservedSeats.findOneAndUpdate(
         {user: user._id, reservationFinished: false},
         { $set: updateObj }
       )
-      const {nextSteps, keyboard} = await getNextSteps(user)
+      const {keyboardMarkup, isLastStep, message: nextStepMessage} = await getNextSteps(reservaion!)
+      const respMessage = isLastStep ?  `${step3Responses.success} ${nextStepMessage}` : step3Responses.success
       await sendResponse({
-        message: `${step3Responses.success}${nextSteps}`,
+        message: respMessage,
         expressResp: res,
         chatId: message.chat.id,
-        reply_markup: keyboard
+        reply_markup: keyboardMarkup
       })
       // res.status(200).send(`${step3Responses.success}${nextSteps}`)
     }else{

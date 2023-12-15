@@ -25,9 +25,8 @@ export async function chooseDate({ user, currentReservation, res, chatId }: Choo
     await sendResponse({message: expectAnoutherValue.expectDuration, expressResp: res, chatId})
     // res.status(400).send(expectAnoutherValue.expectDuration);
   } else if(currentReservation.reservedFrom){
-    const {nextSteps, keyboard} = await getNextSteps(undefined, currentReservation)
-    const message = `${valueAlreadySet.date}\n${nextSteps}`
-    await sendResponse({expressResp: res, message, chatId, reply_markup: keyboard})
+    const {keyboardMarkup} = await getNextSteps(currentReservation)
+    await sendResponse({expressResp: res, message: valueAlreadySet.date, chatId, reply_markup: keyboardMarkup})
   }else{
     // Update reservation to step 3
     await ReservedSeats.updateOne(

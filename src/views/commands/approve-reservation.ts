@@ -24,13 +24,12 @@ export async function approveReservation({currentReservation, user, res, chatId}
   }else{
 
     if(!currentReservation.reservedFrom || !currentReservation.seatId || !currentReservation.duration){
-      // todo: fix it
-      const {nextSteps, keyboard} = await getNextSteps(undefined, currentReservation)
+      const { keyboardMarkup } = await getNextSteps(currentReservation)
       await sendResponse({
-        message: `${responseMessages.reservationNotReadyForApprove} ${nextSteps}`,
+        message: `${responseMessages.reservationNotReadyForApprove}`,
         expressResp: res,
         chatId,
-        reply_markup: keyboard
+        reply_markup: keyboardMarkup
       })
     }
 

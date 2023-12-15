@@ -25,9 +25,8 @@ export async function chooseDuration( { user, currentReservation, res, chatId }:
     await sendResponse({expressResp: res, message: expectAnoutherValue.expectDate, chatId})
     // res.status(400).send(expectAnoutherValue.expectDate);
   }else if(currentReservation.duration){
-    const {nextSteps, keyboard} = await getNextSteps(undefined, currentReservation)
-    const message = `${valueAlreadySet.duration}\n${nextSteps}`
-    await sendResponse({expressResp: res, message, chatId, reply_markup: keyboard})
+    const {keyboardMarkup} = await getNextSteps(currentReservation)
+    await sendResponse({expressResp: res, message: valueAlreadySet.duration, chatId, reply_markup: keyboardMarkup})
   }else{
     // Update reservation to step 3
     await ReservedSeats.updateOne(

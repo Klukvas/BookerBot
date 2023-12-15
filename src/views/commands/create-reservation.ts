@@ -33,6 +33,6 @@ export async function createReservation({user, res, chatId}: CreateReservationCo
     step: 1,
     stepFinished: true,
   })
-  const { keyboard } = await getNextSteps(undefined, reservation)
-  await sendResponse({message: step1Responses.success, chatId, expressResp: res, reply_markup: keyboard})
+  const { keyboardMarkup } = await getNextSteps(reservation)
+  await sendResponse({message: step1Responses.success, chatId, expressResp: res, reply_markup: keyboardMarkup})
 }

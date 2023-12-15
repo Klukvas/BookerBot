@@ -41,9 +41,8 @@ export async function chooseSeat({ currentReservation, user, res, chatId }: Choo
         chatId
       })
     } else if(currentReservation.seatId){
-      const {nextSteps, keyboard} = await getNextSteps(undefined, currentReservation)
-      const message = `${valueAlreadySet.seat}\n${nextSteps}`
-      await sendResponse({expressResp: res, message, chatId, reply_markup: keyboard})
+      const {keyboardMarkup} = await getNextSteps(currentReservation)
+      await sendResponse({expressResp: res, message: valueAlreadySet.seat, chatId, reply_markup: keyboardMarkup})
     } else {
       //If we have reservedFrom and reservedTo values - we could say which seats available for the user
       if(currentReservation.reservedFrom && currentReservation.reservedTo){

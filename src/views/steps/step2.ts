@@ -26,16 +26,17 @@ export async function step2(args: Step2Args) {
     })
     // res.send(step2Responses.seatNotFound)
   }else{
-    await ReservedSeats.updateOne(
+    const reservation = await ReservedSeats.findOneAndUpdate(
       {user: user._id, reservationFinished: false},
       {$set: {step: 2, stepFinished: true, seatId: selectedSeat._id}}
     )
-    const {nextSteps, keyboard} = await getNextSteps(user)
+    const {keyboardMarkup, isLastStep, message: nextStepMessage} = await getNextSteps(reservation!)
+    const respMessage = isLastStep ?  `${step2Responses.success} ${nextStepMessage}` : step2Responses.success
     await sendResponse({
-      message: `${step2Responses.success}`,
+      message: respMessage,
       chatId: message.chat.id,
       expressResp: res,
-      reply_markup: keyboard
+      reply_markup: keyboardMarkup
     })
   }
     

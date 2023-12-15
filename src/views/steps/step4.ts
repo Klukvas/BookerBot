@@ -37,16 +37,18 @@ export async function step4(args: Step4Args) {
         updateObj.reservedTo = reservedTo
       }
       // add duration to the start of reservation = time of reservaion ends
-      await ReservedSeats.updateOne(
+      const reservation = await ReservedSeats.findOneAndUpdate(
         {user: user._id, reservationFinished: false}, 
         {$set: updateObj}
       )
-      const {nextSteps, keyboard} = await getNextSteps(user)
+      const {message: nextStepMessage, isLastStep, keyboardMarkup} = await getNextSteps(reservation!)
+      const respMessage = isLastStep ?  `${step4Responses.success} ${nextStepMessage}` : step4Responses.success
+
       await sendResponse({
-        message: `${step4Responses.success}`,
+        message: respMessage,
         chatId: message.chat.id,
         expressResp: res,
-        reply_markup: keyboard
+        reply_markup: keyboardMarkup
       })
     }
 
