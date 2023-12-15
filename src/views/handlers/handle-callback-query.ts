@@ -20,7 +20,7 @@ export async function handleCallbackQuery({callback, res}: HandleCallbackQueryAr
   /**
    * Here we are handling request when the user presses the button
    */
-  const chatId = callback.chat.id
+  const chatId = callback.message.chat.id
   let reservation;
   const user = await CreateUserIfNotExist(callback)
   
@@ -49,7 +49,6 @@ export async function handleCallbackQuery({callback, res}: HandleCallbackQueryAr
     case commandNames.activeReservations:
       await activeReservations({ user, res, chatId });
       break;
-
   }
   
 }
