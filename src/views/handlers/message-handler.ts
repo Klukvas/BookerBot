@@ -18,22 +18,17 @@ type MessageHandlerArgs = {
 
 export async function messageHandler({message, res}: MessageHandlerArgs) {
   const chatId = message.chat.id;
-  if(!chatId){
-    logger.error('Received message without chat id')
-    res.status(200).send('ok')
-    return
-  }
   const user = await CreateUserIfNotExist(message);
-  if(message?.text){
-    await sendResponse({
-      message: responseMessages.unknownMessage,
-      expressResp: res,
-      chatId: message.chat.id
-    })
-    return
-  }
 
-  switch (message.text){
+  switch (message?.text){
+    
+    case undefined:
+      await sendResponse({
+        message: responseMessages.unknownMessage,
+        expressResp: res,
+        chatId: message.chat.id
+      })
+      break;
     
     case commandNames.start:
       await sendResponse({
