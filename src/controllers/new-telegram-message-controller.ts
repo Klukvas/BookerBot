@@ -9,6 +9,11 @@ export async function newTelegramMessageController(req: Request, res: Response) 
 
   const { message, edited_message, callback_query, ...rest }  = req.body;
 
+  logger.debug(`edited_message: ${edited_message}`)
+  logger.debug(`callback_query: ${callback_query}`)
+  logger.debug(`rest: ${rest}`)
+  logger.debug(`message: ${message}`)
+
   if(edited_message) {
     res.status(200).send('ok')
     return
