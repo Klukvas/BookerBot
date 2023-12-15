@@ -65,7 +65,7 @@ export async function chooseSeat({ currentReservation, user, res, chatId }: Choo
         }
       }else{
         await ReservedSeats.updateOne(
-          { user: user._id },
+          { user: user._id, reservationFinished: false },
           { $set: { step: 2, stepFinished: false } }
         );
         await sendResponse({

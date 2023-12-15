@@ -17,7 +17,7 @@ import { createReservationIfNotExist } from "../views/create-reservation-if-not-
 import { logger } from "../core/logger";
 
 export async function newTelegramMessageController(req: Request, res: Response) {
-  logger.debug(`Request body: ${req.body}`)
+  logger.debug(`Request body: ${JSON.stringify(req.body)}`)
   const { message, edited_message }  = req.body;
   if(edited_message) {
     res.status(200).send('ok')
