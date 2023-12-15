@@ -20,7 +20,7 @@ export async function chooseDate({ user, res, chatId }: ChooseDate) {
     return
   }
   if (reservation.step === 2 && !reservation.stepFinished) {
-    await sendResponse({message: expectAnoutherValue.expectSeatName, expressResp: res, chatId})
+    await sendResponse({message: expectAnoutherValue.expectSeat, expressResp: res, chatId})
   } else if (reservation.step === 3 && !reservation.stepFinished) {
     await sendResponse({message: expectAnoutherValue.expectDuration, expressResp: res, chatId})
   } else if(reservation.reservedFrom){

@@ -21,7 +21,7 @@ export async function chooseDuration( { user, res, chatId }: ChooseDuration) {
   }
 
   if (reservation.step === 2 && !reservation.stepFinished) {
-    await sendResponse({expressResp: res, message: expectAnoutherValue.expectSeatName, chatId})
+    await sendResponse({expressResp: res, message: expectAnoutherValue.expectSeat, chatId})
   } else if (reservation.step === 4 && !reservation.stepFinished) {
     await sendResponse({expressResp: res, message: expectAnoutherValue.expectDate, chatId})
   }else if(reservation.duration){

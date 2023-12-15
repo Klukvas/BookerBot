@@ -3,7 +3,7 @@ import { Message } from "../../types/new-message";
 import { logger } from "../../core/logger";
 import { CreateUserIfNotExist } from "../CreateUserIfNotExist";
 import { sendResponse } from "../../utils/send-response";
-import { commandNames, responseMessages, startMessage } from "../../utils/response-messages";
+import { commandNames, expectAnoutherValue, responseMessages, startMessage } from "../../utils/response-messages";
 import { activeReservations } from "../commands/active-reservations";
 import { createReservation } from "../commands/create-reservation";
 import { ReservedSeats } from "../../models";
@@ -56,8 +56,14 @@ export async function messageHandler({message, res}: MessageHandlerArgs) {
         logger.info(`User: ${user.username} send value for step 3`)
         await step3({ message , user, res, currentReservation });
       } else if (currentReservation?.step == 2 && !currentReservation.stepFinished) {
-        logger.info(`User: ${user.username} send value for step 2`)
-        await step2({ message, user, res });
+        // we are using btns to select seat -> so here we just notify user that  we a waiting for btn to be pressed
+        await sendResponse({
+          message: expectAnoutherValue.expectSeat,
+          expressResp: res,
+          chatId
+        })
+        // logger.info(`User: ${user.username} send value for step 2`)
+        // await step2({ message, user, res });
       } else if (currentReservation?.step == 4 && !currentReservation.stepFinished) {
         logger.info(`User: ${user.username} send value for step 4`)
         await step4({ message, user, res, currentReservation });

@@ -6,31 +6,33 @@ import { Message } from "../../types/new-message"
 import { step2Responses } from "../../utils/response-messages"
 import { sendResponse } from "../../utils/send-response"
 import { logger } from "../../core/logger"
+import { ObjectId } from "mongodb"
+import { CallbackQury } from "../../types/callback-query"
 
 type Step2Args = {
-    message: Message
+    callback: CallbackQury
     user: IUser
     res: Response
 }
 
-export async function step2(args: Step2Args) {
-  const {message, user, res} = args
-  let searchedSeatNumber
+export async function step2({callback, user, res}: Step2Args) {
+  let selectedSeatId
+  const chatId = callback.chat.id
   try{
-    searchedSeatNumber = Number(message.text.trim())
+    selectedSeatId = callback.data.split('-')[0].trim()
   }catch(err){
     await sendResponse({
       message: step2Responses.seatNotFound,
-      chatId: message.chat.id,
+      chatId: chatId,
       expressResp: res
     })
   }
-  const selectedSeat = await Seat.findOne({seatNumber: searchedSeatNumber});
+  const selectedSeat = await Seat.findOne({_id: new ObjectId(selectedSeatId)});
   
   if(!selectedSeat){
     await sendResponse({
       message: step2Responses.seatNotFound,
-      chatId: message.chat.id,
+      chatId: chatId,
       expressResp: res
     })
     // res.send(step2Responses.seatNotFound)
@@ -45,7 +47,7 @@ export async function step2(args: Step2Args) {
     const respMessage = isLastStep ?  `${step2Responses.success} ${nextStepMessage}` : step2Responses.success
     await sendResponse({
       message: respMessage,
-      chatId: message.chat.id,
+      chatId: chatId,
       expressResp: res,
       reply_markup: keyboardMarkup
     })
