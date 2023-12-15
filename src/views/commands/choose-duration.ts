@@ -26,7 +26,7 @@ export async function chooseDuration( { user, currentReservation, res, chatId }:
   }else{
     // Update reservation to step 3
     await ReservedSeats.updateOne(
-      { user: user._id },
+      { user: user._id, reservationFinished: false},
       { $set: { step: 3, stepFinished: false } }
     );
     await sendResponse({expressResp: res, message: step3Responses.successCommand, chatId})

@@ -32,7 +32,7 @@ export async function step3(args: Step3Args) {
         updateObj['reservedTo'] = reservedTo
       }
       await ReservedSeats.updateOne(
-        {user: user._id},
+        {user: user._id, reservationFinished: false},
         { $set: updateObj }
       )
       const {nextSteps, keyboard} = await getNextSteps(user)

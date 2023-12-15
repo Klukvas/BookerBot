@@ -10,7 +10,7 @@ export async function getNextSteps(user?: IUser, reservation?:IReserved) {
 
   let nextSteps = ''
   const keyboard = {
-    keyboard: Array(),
+    inline_keyboard: Array(),
     one_time_keyboard: true,
   }
   let reservedSeat
@@ -26,15 +26,15 @@ export async function getNextSteps(user?: IUser, reservation?:IReserved) {
 
   if(!reservedSeat.reservedFrom){
     nextSteps += nextStepMessages.pickDate
-    keyboard.keyboard.push([{ text: '📅 Выберать дату', callback_data: commandNames.chooseDate }])
+    keyboard.inline_keyboard.push([{ text: '📅 Выберать дату', callback_data: commandNames.chooseDate }])
   }
   if(!reservedSeat.seatId){
     nextSteps += nextStepMessages.pickSeat
-    keyboard.keyboard.push([{ text: '💺 Выбрать место', callback_data: commandNames.chooseSeat }])
+    keyboard.inline_keyboard.push([{ text: '💺 Выбрать место', callback_data: commandNames.chooseSeat }])
   }
   if(!reservedSeat.duration){
     nextSteps += nextStepMessages.pickDuration
-    keyboard.keyboard.push([{ text: '⏰ Выбрать продолжительность', callback_data: commandNames.chooseDuration }])
+    keyboard.inline_keyboard.push([{ text: '⏰ Выбрать продолжительность', callback_data: commandNames.chooseDuration }])
   }
   if(nextSteps === ''){
     const prettyReservations = await reservationFormatterBot([reservedSeat])

@@ -45,7 +45,7 @@ export async function chooseSeat({ currentReservation, user, res, chatId }: Choo
        const foundAvailableSeats = await findAvailableSeats({currentReservation})
        if(foundAvailableSeats.length >= 1){
           await ReservedSeats.updateOne(
-            { user: user._id },
+            { user: user._id, reservationFinished: false },
             { $set: { step: 2, stepFinished: false } }
           );
           const foundFormattedSeats = seatFormatter(foundAvailableSeats)
