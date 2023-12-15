@@ -13,8 +13,8 @@ import { approveReservation } from "../views/commands/approve-reservation";
 import { activeReservations } from "../views/commands/active-reservations";
 import { sendResponse } from "../utils/send-response";
 import { Message } from "../types/new-message";
-import { appLogger } from "../core/logger";
 import { createReservationIfNotExist } from "../views/create-reservation-if-not-exist";
+import { logger } from "../core/logger";
 
 export async function newTelegramMessageController(req: Request, res: Response) {
   const { message, edited_message }  = req.body;
@@ -22,8 +22,14 @@ export async function newTelegramMessageController(req: Request, res: Response) 
     res.status(200).send('ok')
     return
   }
-  appLogger.info(`message: ${JSON.stringify(message)}`)
-  const chatId = message?.chat?.id;
+  logger.info(`Receive new message from telegram: ${JSON.stringify(message)}`)
+
+  const chatId = message.chat.id;
+  if(!chatId){
+    logger.error('Received message without chat id')
+    res.status(200).send('ok')
+    return
+  }
   const user = await CreateUserIfNotExist(message);
   let currentReservation = await ReservedSeats.findOne({ user: user._id, reservationFinished: false });
   if(!message?.text){
@@ -77,10 +83,13 @@ export async function newTelegramMessageController(req: Request, res: Response) 
 
     default:
       if (currentReservation?.step == 3 && !currentReservation.stepFinished) {
+        logger.info(`User: ${user.username} send value for step 3`)
         await step3({ message , user, res, currentReservation });
       } else if (currentReservation?.step == 2 && !currentReservation.stepFinished) {
+        logger.info(`User: ${user.username} send value for step 2`)
         await step2({ message, user, res });
       } else if (currentReservation?.step == 4 && !currentReservation.stepFinished) {
+        logger.info(`User: ${user.username} send value for step 4`)
         await step4({ message, user, res, currentReservation });
       }else{
         await sendResponse({

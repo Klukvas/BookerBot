@@ -1,3 +1,4 @@
+import { logger } from "../core/logger";
 import { IReserved, ReservedSeats } from "../models";
 import { IUser } from "../models/user";
 
@@ -17,6 +18,7 @@ export async function createReservationIfNotExist(
   }: CreateReservationIfNotExistArgs
 ): Promise<IReserved>{
   if(!existingReservation){
+    logger.info(`Reservation is not exist for user: ${user.username} -> creating`)
     const reservation = await ReservedSeats.create({
       user: user._id,
       step: step,
@@ -24,5 +26,6 @@ export async function createReservationIfNotExist(
     });
     return reservation
   }
+  logger.info(`Reservation exists for user: ${user.username}`)
   return existingReservation
 }

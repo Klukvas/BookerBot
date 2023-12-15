@@ -1,7 +1,8 @@
 import axios from "axios";
 import env from "../core/env";
 import { Response } from "express";
-import { appLogger } from "../core/logger";
+import { logger } from "../core/logger";
+
 
 type SendResponseArgs = {
   message: string;
@@ -27,7 +28,7 @@ export async function sendResponse({
   try {
     await axios.post(url, params);
   } catch (err) {
-    appLogger.error(`Could not send request to bot with error: ${err}`);
+    logger.error(`Could not send request to bot with error: ${err}`);
   }
 
   expressResp.status(200).contentType("text").send("OK");

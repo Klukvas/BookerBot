@@ -7,9 +7,7 @@ import adminRouter from "../routers/admin";
 import bodyParser from "body-parser"
 import sessions from 'express-session'
 import cookieParser from 'cookie-parser'
-import { httpLogger } from "../middlewares/logger-middleware";
-import { appLogger } from "./logger";
-
+import { logger } from "./logger";
 class App{
   
   public app: Express
@@ -25,8 +23,6 @@ class App{
     this.app.use(bodyParser.json());
     this.app.use(express.urlencoded({ extended: true }));
     
-    this.app.use(httpLogger)
-
     this.app.use(cookieParser());
     this.app.use(sessions({
       secret: "thisismysecrctekey",
@@ -45,7 +41,7 @@ class App{
 
   listen(){
     this.app.listen(this.env.port, async () => {
-      appLogger.info(`App is running at http://localhost:${this.env.port}`);
+      logger.info(`App is running at http://localhost:${this.env.port}`);
       await connectToDb();
     });
   }

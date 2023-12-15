@@ -5,6 +5,7 @@ import { findAvailableSeats } from "../../utils/find-available-seats";
 import { expectAnoutherValue, step2Responses } from "../../utils/response-messages";
 import { sendResponse } from "../../utils/send-response";
 import { seatFormatter } from "../../utils/formatters/seat-formatter";
+import { logger } from "../../core/logger";
 
 
 type ChooseSeatArgs = {
@@ -26,21 +27,18 @@ export async function chooseSeat({ currentReservation, user, res, chatId }: Choo
         expressResp: res,
         chatId
       })
-      // res.status(200).send(`${step3Responses.successCommand}${allSeats}`);
     } else if (currentReservation.step === 3 && !currentReservation.stepFinished) {
       await sendResponse({
         message: expectAnoutherValue.expectDuration,
         expressResp: res,
         chatId
       })
-      // res.status(400).send(expectAnoutherValue.expectDuration);
     } else if (currentReservation.step === 4 && !currentReservation.stepFinished) {
       await sendResponse({
         message: expectAnoutherValue.expectDate,
         expressResp: res,
         chatId
       })
-      // res.status(400).send(expectAnoutherValue.expectDate);
     } else {
       //If we have reservedFrom and reservedTo values - we could say which seats available for the user
       if(currentReservation.reservedFrom && currentReservation.reservedTo){
@@ -56,7 +54,6 @@ export async function chooseSeat({ currentReservation, user, res, chatId }: Choo
             expressResp: res,
             chatId
           })
-          // res.status(200).send(`${step3Responses.successCommand}${foundAvailableSeats}`);
         }else{
           //Todo: here should be suggestion
           await ReservedSeats.deleteOne({ user: user._id,  reservationFinished: false})
@@ -65,7 +62,6 @@ export async function chooseSeat({ currentReservation, user, res, chatId }: Choo
             expressResp: res,
             chatId
           })
-          // res.status(400).send(step2Responses.freeSeatNotFound)
         }
       }else{
         await ReservedSeats.updateOne(
@@ -77,12 +73,11 @@ export async function chooseSeat({ currentReservation, user, res, chatId }: Choo
           expressResp: res,
           chatId
         })
-        // res.status(200).send(`${step3Responses.successCommand}${allSeats}`);
       }
       
     }
   } catch (error) {
-    console.error(error);
+    logger.error(`Error with choosing seat: ${error}`)
     res.status(500).send('Произошла ошибка при обработке запроса.');
   }
 }

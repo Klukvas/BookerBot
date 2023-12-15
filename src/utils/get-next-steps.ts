@@ -1,4 +1,4 @@
-import { appLogger } from "../core/logger";
+import { logger } from "../core/logger";
 import { IReserved, ReservedSeats } from "../models";
 import { IUser } from "../models/user";
 import { reservationFormatterBot } from "./formatters/reservation-formatter-bot";
@@ -41,5 +41,6 @@ export async function getNextSteps(user?: IUser, reservation?:IReserved) {
     nextSteps += nextStepMessages.noStepsLeft + `${prettyReservations}`
   }
   console.log(`keyboard: ${JSON.stringify(keyboard)}`)
+  logger.debug(`keyboard: ${JSON.stringify(keyboard)}`)
   return {nextSteps, keyboard}
 }
