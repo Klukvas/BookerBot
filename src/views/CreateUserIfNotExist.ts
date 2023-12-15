@@ -1,6 +1,6 @@
 import { User, IUser } from "../models/user";
 import { Message } from "../types/new-message";
-import { CallbackQury } from "../types/new-message-types/callback-query";
+import { CallbackQury } from "../types/callback-query";
 
 
 export async function CreateUserIfNotExist(message: Message | CallbackQury):Promise<IUser> {

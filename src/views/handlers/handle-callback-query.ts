@@ -1,5 +1,5 @@
 import { Response } from "express";
-import { CallbackQury } from "../../types/new-message-types/callback-query"
+import { CallbackQury } from "../../types/callback-query"
 import { commandNames } from "../../utils/response-messages";
 import { chooseDuration } from "../commands/choose-duration";
 import { chooseSeat } from "../commands/choose-seat";

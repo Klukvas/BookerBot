@@ -1,5 +1,5 @@
-import { Chat } from "./new-message-types/chat";
-import { MessageFrom } from "./new-message-types/message-from";
+import { Chat } from "./chat";
+import { MessageFrom } from "./message-from";
 
 interface Message {
   chat: Chat;
