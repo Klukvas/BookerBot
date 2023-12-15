@@ -38,8 +38,8 @@ export async function getNextSteps(user?: IUser, reservation?:IReserved) {
   }
   if(nextSteps === ''){
     const prettyReservations = await reservationFormatterBot([reservedSeat])
+    keyboard.inline_keyboard.push([{ text: 'Подтвердить резервацию', callback_data: commandNames.approveReservation }])
     nextSteps += nextStepMessages.noStepsLeft + `${prettyReservations}`
   }
-  logger.debug(`keyboard: ${JSON.stringify(keyboard)}`)
   return {nextSteps, keyboard}
 }

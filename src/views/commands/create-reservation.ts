@@ -35,6 +35,4 @@ export async function createReservation({user, res, chatId}: CreateReservationCo
   })
   const { keyboard } = await getNextSteps(undefined, reservation)
   await sendResponse({message: step1Responses.success, chatId, expressResp: res, reply_markup: keyboard})
-  // await sendResponse({message: step1Responses.success, chatId, expressResp: res, reply_markup: keyboard})
-  // res.status(200).send(step1Responses.success);
 }

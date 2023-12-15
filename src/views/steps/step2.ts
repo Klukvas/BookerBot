@@ -32,12 +32,11 @@ export async function step2(args: Step2Args) {
     )
     const {nextSteps, keyboard} = await getNextSteps(user)
     await sendResponse({
-      message: `${step2Responses.success}\n${nextSteps}`,
+      message: `${step2Responses.success}`,
       chatId: message.chat.id,
       expressResp: res,
       reply_markup: keyboard
     })
-    // res.send(`${step2Responses.success}\n${nextSteps}`)
   }
     
 }

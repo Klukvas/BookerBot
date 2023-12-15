@@ -43,12 +43,11 @@ export async function step4(args: Step4Args) {
       )
       const {nextSteps, keyboard} = await getNextSteps(user)
       await sendResponse({
-        message: `${step4Responses.success}\n${nextSteps}`,
+        message: `${step4Responses.success}`,
         chatId: message.chat.id,
         expressResp: res,
         reply_markup: keyboard
       })
-      // res.send(`${step4Responses.success}\n${nextSteps}`)
     }
 
   }else{
@@ -57,7 +56,6 @@ export async function step4(args: Step4Args) {
       chatId: message.chat.id,
       expressResp: res
     })
-    // res.status(422).send(validatedDateTime.error)
   }
 
 }
