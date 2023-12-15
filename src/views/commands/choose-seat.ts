@@ -2,10 +2,11 @@ import { Response } from "express";
 import { IReserved, ReservedSeats, Seat } from "../../models";
 import { IUser } from "../../models/user";
 import { findAvailableSeats } from "../../utils/find-available-seats";
-import { expectAnoutherValue, step2Responses } from "../../utils/response-messages";
+import { expectAnoutherValue, step2Responses, valueAlreadySet } from "../../utils/response-messages";
 import { sendResponse } from "../../utils/send-response";
 import { seatFormatter } from "../../utils/formatters/seat-formatter";
 import { logger } from "../../core/logger";
+import { getNextSteps } from "../../utils/get-next-steps";
 
 
 type ChooseSeatArgs = {
@@ -39,6 +40,10 @@ export async function chooseSeat({ currentReservation, user, res, chatId }: Choo
         expressResp: res,
         chatId
       })
+    } else if(currentReservation.seatId){
+      const {nextSteps, keyboard} = await getNextSteps(undefined, currentReservation)
+      const message = `${valueAlreadySet.seat}\n${nextSteps}`
+      await sendResponse({expressResp: res, message, chatId, reply_markup: keyboard})
     } else {
       //If we have reservedFrom and reservedTo values - we could say which seats available for the user
       if(currentReservation.reservedFrom && currentReservation.reservedTo){

@@ -1,24 +1,16 @@
+import { Chat } from "./new-message-types/chat";
+import { MessageFrom } from "./new-message-types/message-from";
+
 interface Message {
-    date: number;
-    chat: {
-      last_name: string;
-      id: number;
-      first_name: string;
-      username: string;
-    };
-    message_id: number;
-    from: {
-      last_name: string;
-      id: number;
-      first_name: string;
-      username: string;
-    };
-    text: string;
-  }
+  chat: Chat;
+  message_id: number;
+  from: MessageFrom;
+  text: string;
+}
   
-  interface TelegramUpdate {
-    update_id: number;
-    message: Message;
-  }
+interface TelegramUpdate {
+  update_id: number;
+  message: Message;
+}
 
 export {TelegramUpdate, Message}

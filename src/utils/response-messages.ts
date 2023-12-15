@@ -14,6 +14,11 @@ export const commandNames = {
     createReservation: '/createReservation'
 }
 
+export const valueAlreadySet = {
+    duration: "Продолжительность уже выбрана.",
+    seat: "Место уже выбрано уже выбрано.",
+    date: "Дата уже выбрано уже выбрана."
+}
 
 export const step1Responses = {
     tooManyReservations: 'Извините, но у вас слишком много активных резерваций',

@@ -1,8 +1,9 @@
 import { Response } from "express";
 import { IReserved, ReservedSeats } from "../../models";
 import { IUser } from "../../models/user";
-import { expectAnoutherValue, responseMessages, step4Responses } from "../../utils/response-messages";
+import { expectAnoutherValue, responseMessages, step4Responses, valueAlreadySet } from "../../utils/response-messages";
 import { sendResponse } from "../../utils/send-response";
+import { getNextSteps } from "../../utils/get-next-steps";
 
 type ChooseDate = {
   currentReservation: IReserved | null;
@@ -23,6 +24,10 @@ export async function chooseDate({ user, currentReservation, res, chatId }: Choo
   } else if (currentReservation.step === 3 && !currentReservation.stepFinished) {
     await sendResponse({message: expectAnoutherValue.expectDuration, expressResp: res, chatId})
     // res.status(400).send(expectAnoutherValue.expectDuration);
+  } else if(currentReservation.reservedFrom){
+    const {nextSteps, keyboard} = await getNextSteps(undefined, currentReservation)
+    const message = `${valueAlreadySet.date}\n${nextSteps}`
+    await sendResponse({expressResp: res, message, chatId, reply_markup: keyboard})
   }else{
     // Update reservation to step 3
     await ReservedSeats.updateOne(
