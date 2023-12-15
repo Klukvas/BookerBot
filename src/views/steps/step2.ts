@@ -17,7 +17,7 @@ type Step2Args = {
 
 export async function step2({callback, user, res}: Step2Args) {
   let selectedSeatId
-  const chatId = callback.chat.id
+  const chatId = callback.message.chat.id
   try{
     selectedSeatId = callback.data.split('-')[0].trim()
   }catch(err){
