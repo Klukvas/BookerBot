@@ -24,7 +24,8 @@ export async function newTelegramMessageController(req: Request, res: Response) 
     return
   }
   if(callback_query){
-    logger.debug(`callback_query: ${callback_query}`)
+    logger.debug(`callback_query: ${ JSON.stringify(callback_query)}`)
+    sendResponse({message: 'random message', chatId: callback_query.message.chat.id, expressResp: res})
     res.status(200).send('ok')
     return
   }
