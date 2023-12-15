@@ -19,7 +19,7 @@ export async function step2({callback, user, res}: Step2Args) {
   let selectedSeatId
   const chatId = callback.message.chat.id
   try{
-    selectedSeatId = callback.data.split('-')[0].trim()
+    selectedSeatId = callback.data.split('-')[1].trim()
   }catch(err){
     await sendResponse({
       message: step2Responses.seatNotFound,
