@@ -31,7 +31,7 @@ export async function step2(args: Step2Args) {
       {user: user._id, reservationFinished: false},
       {$set: {step: 2, stepFinished: true, seatId: selectedSeat._id}}
     )
-    logger.debug(`Seat updated: ${reservation?.toJSON()}`)
+    logger.debug(`Seat updated: ${JSON.stringify(reservation?.toJSON())}`)
     const {keyboardMarkup, isLastStep, message: nextStepMessage} = await getNextSteps(reservation!)
     const respMessage = isLastStep ?  `${step2Responses.success} ${nextStepMessage}` : step2Responses.success
     await sendResponse({
