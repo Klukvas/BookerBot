@@ -1,5 +1,4 @@
 import { IReserved, Seat } from "../../models";
-import { calculatePrice } from "../calculate-price";
 
 export async function reservationFormatterBot(reservations: IReserved[]){
   let formattedText = ''

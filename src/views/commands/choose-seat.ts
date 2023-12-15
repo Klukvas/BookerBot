@@ -24,10 +24,12 @@ export async function chooseSeat({ user, res, chatId }: ChooseSeatArgs) {
 
   if(isNew){
     // if it is new reservation -> we could skip processing
+    const keyboard = getSeatKeyboard({seats: allSeats})
     await sendResponse({
       message: `${step2Responses.successCommand}\n${formattedAllSeats}`,
       expressResp: res,
-      chatId
+      chatId,
+      reply_markup: keyboard
     })
     return
   }
@@ -79,10 +81,12 @@ export async function chooseSeat({ user, res, chatId }: ChooseSeatArgs) {
           { user: user._id, reservationFinished: false },
           { $set: { step: 2, stepFinished: false } }
         );
+        const keyboard = getSeatKeyboard({seats: allSeats})
         await sendResponse({
           message: `${step2Responses.successCommand}${formattedAllSeats}`,
           expressResp: res,
-          chatId
+          chatId,
+          reply_markup: keyboard
         })
       }
       
