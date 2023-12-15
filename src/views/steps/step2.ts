@@ -5,6 +5,7 @@ import { getNextSteps } from "../../utils/get-next-steps"
 import { Message } from "../../types/new-message"
 import { step2Responses } from "../../utils/response-messages"
 import { sendResponse } from "../../utils/send-response"
+import { logger } from "../../core/logger"
 
 type Step2Args = {
     message: Message
@@ -30,6 +31,7 @@ export async function step2(args: Step2Args) {
       {user: user._id, reservationFinished: false},
       {$set: {step: 2, stepFinished: true, seatId: selectedSeat._id}}
     )
+    logger.debug(`Seat updated: ${reservation?.toJSON()}`)
     const {keyboardMarkup, isLastStep, message: nextStepMessage} = await getNextSteps(reservation!)
     const respMessage = isLastStep ?  `${step2Responses.success} ${nextStepMessage}` : step2Responses.success
     await sendResponse({

@@ -9,6 +9,7 @@ import { Moment } from "moment"
 import { Message } from "../../types/new-message"
 import { step3Responses } from "../../utils/response-messages"
 import { sendResponse } from "../../utils/send-response"
+import { logger } from "../../core/logger"
 
 type Step3Args = {
   message: Message
@@ -31,11 +32,13 @@ export async function step3(args: Step3Args) {
         )
         updateObj['reservedTo'] = reservedTo
       }
-      const reservaion = await ReservedSeats.findOneAndUpdate(
+      const reservation = await ReservedSeats.findOneAndUpdate(
         {user: user._id, reservationFinished: false},
         { $set: updateObj }
       )
-      const {keyboardMarkup, isLastStep, message: nextStepMessage} = await getNextSteps(reservaion!)
+      logger.debug(`Duration updated: ${reservation?.toJSON()}`)
+
+      const {keyboardMarkup, isLastStep, message: nextStepMessage} = await getNextSteps(reservation!)
       const respMessage = isLastStep ?  `${step3Responses.success} ${nextStepMessage}` : step3Responses.success
       await sendResponse({
         message: respMessage,

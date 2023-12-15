@@ -8,6 +8,7 @@ import { responseMessages, step4Responses } from "../../utils/response-messages"
 import { getNextSteps } from "../../utils/get-next-steps"
 import { Message } from "../../types/new-message"
 import { sendResponse } from "../../utils/send-response"
+import { logger } from "../../core/logger"
 
 type Step4Args = {
   user: IUser
@@ -41,6 +42,7 @@ export async function step4(args: Step4Args) {
         {user: user._id, reservationFinished: false}, 
         {$set: updateObj}
       )
+      logger.debug(`Date updated: ${reservation?.toJSON()}`)
       const {message: nextStepMessage, isLastStep, keyboardMarkup} = await getNextSteps(reservation!)
       const respMessage = isLastStep ?  `${step4Responses.success} ${nextStepMessage}` : step4Responses.success
 
