@@ -7,46 +7,50 @@ import { sendResponse } from "../../utils/send-response";
 import { seatFormatter } from "../../utils/formatters/seat-formatter";
 import { logger } from "../../core/logger";
 import { getNextSteps } from "../../utils/get-next-steps";
+import { createReservationIfNotExist } from "../create-reservation-if-not-exist";
 
 
 type ChooseSeatArgs = {
-  currentReservation: IReserved | null;
   user: IUser;
   res: Response;
   chatId: number
 };
 
-export async function chooseSeat({ currentReservation, user, res, chatId }: ChooseSeatArgs) {
+export async function chooseSeat({ user, res, chatId }: ChooseSeatArgs) {
   let allSeats = await Seat.find({});
   let formattedAllSeats = seatFormatter(allSeats)
+  const {reservation, isNew} = await createReservationIfNotExist({user, step: 2})
+
+  if(isNew){
+    // if it is new reservation -> we could skip processing
+    await sendResponse({
+      message: `${step2Responses.successCommand}\n${formattedAllSeats}`,
+      expressResp: res,
+      chatId
+    })
+    return
+  }
 
   try {
-    if (!currentReservation) {
-      await ReservedSeats.create({ user: user._id, step: 2, stepFinished: false });
-      await sendResponse({
-        message: `${step2Responses.successCommand}\n${formattedAllSeats}`,
-        expressResp: res,
-        chatId
-      })
-    } else if (currentReservation.step === 3 && !currentReservation.stepFinished) {
+    if (reservation.step === 3 && !reservation.stepFinished) {
       await sendResponse({
         message: expectAnoutherValue.expectDuration,
         expressResp: res,
         chatId
       })
-    } else if (currentReservation.step === 4 && !currentReservation.stepFinished) {
+    } else if (reservation.step === 4 && !reservation.stepFinished) {
       await sendResponse({
         message: expectAnoutherValue.expectDate,
         expressResp: res,
         chatId
       })
-    } else if(currentReservation.seatId){
-      const {keyboardMarkup} = await getNextSteps(currentReservation)
+    } else if(reservation.seatId){
+      const {keyboardMarkup} = await getNextSteps(reservation)
       await sendResponse({expressResp: res, message: valueAlreadySet.seat, chatId, reply_markup: keyboardMarkup})
     } else {
       //If we have reservedFrom and reservedTo values - we could say which seats available for the user
-      if(currentReservation.reservedFrom && currentReservation.reservedTo){
-       const foundAvailableSeats = await findAvailableSeats({currentReservation})
+      if(reservation.reservedFrom && reservation.reservedTo){
+       const foundAvailableSeats = await findAvailableSeats({currentReservation: reservation})
        if(foundAvailableSeats.length >= 1){
           await ReservedSeats.updateOne(
             { user: user._id, reservationFinished: false },

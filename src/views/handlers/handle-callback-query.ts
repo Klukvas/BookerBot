@@ -27,23 +27,19 @@ export async function handleCallbackQuery({callback, res}: HandleCallbackQueryAr
   switch (callback.data) {
 
     case commandNames.chooseDuration:
-      reservation = await createReservationIfNotExist({user, step: 3})
-      await chooseDuration({ currentReservation: reservation, user, res, chatId });
+      await chooseDuration({user, res, chatId });
       break;
 
     case commandNames.chooseSeat:
-      reservation = await createReservationIfNotExist({user, step: 2})
-      await chooseSeat({ user, currentReservation: reservation, res, chatId });
+      await chooseSeat({ user, res, chatId });
       break;
 
     case commandNames.chooseDate:
-      reservation = await createReservationIfNotExist({user, step: 4})
-      await chooseDate({ user, currentReservation: reservation, res, chatId });
+      await chooseDate({ user, res, chatId });
       break;
 
     case commandNames.approveReservation:
-      reservation = await ReservedSeats.findOne({ user: user._id, reservationFinished: false });
-      await approveReservation({ user, currentReservation: reservation, res, chatId });
+      await approveReservation({ user, res, chatId });
       break;
 
     case commandNames.activeReservations:

@@ -1,12 +1,16 @@
 import { logger } from "../core/logger";
 import { IReserved, ReservedSeats } from "../models";
-import { IUser } from "../models/user";
+import { IUser, User } from "../models/user";
 
 type CreateReservationIfNotExistArgs = {
   step: 1 | 2 | 3 | 4
   user: IUser
   stepFinished?: boolean
-  existingReservation?: IReserved 
+}
+
+type CreateReservationIfNotExistResult = {
+  reservation: IReserved
+  isNew: boolean
 }
 
 export async function createReservationIfNotExist(
@@ -14,18 +18,19 @@ export async function createReservationIfNotExist(
     step, 
     user, 
     stepFinished = false,
-    existingReservation
   }: CreateReservationIfNotExistArgs
-): Promise<IReserved>{
-  if(!existingReservation){
+): Promise<CreateReservationIfNotExistResult>{
+  
+  let reservation = await ReservedSeats.findOne({user: user._id, reservationFinished: false})
+  let isNew = false
+  if(!reservation){
     logger.info(`Reservation is not exist for user: ${user.username} -> creating`)
-    const reservation = await ReservedSeats.create({
+    reservation = await ReservedSeats.create({
       user: user._id,
       step: step,
       stepFinished: stepFinished,
     });
-    return reservation
+    isNew = true
   }
-  logger.info(`Reservation exists for user: ${user.username}`)
-  return existingReservation
+    return { reservation, isNew }
 }

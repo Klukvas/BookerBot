@@ -42,7 +42,7 @@ export async function step4(args: Step4Args) {
         {user: user._id, reservationFinished: false}, 
         {$set: updateObj}
       )
-      logger.debug(`Date updated: ${reservation?.toJSON()}`)
+      logger.debug(`Date updated: ${JSON.stringify(reservation?.toJSON())}`)
       const {message: nextStepMessage, isLastStep, keyboardMarkup} = await getNextSteps(reservation!)
       const respMessage = isLastStep ?  `${step4Responses.success} ${nextStepMessage}` : step4Responses.success
 
