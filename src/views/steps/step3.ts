@@ -34,7 +34,8 @@ export async function step3(args: Step3Args) {
       }
       const reservation = await ReservedSeats.findOneAndUpdate(
         {user: user._id, reservationFinished: false},
-        { $set: updateObj }
+        { $set: updateObj },
+        { new: true }
       )
       logger.debug(`Duration updated: ${JSON.stringify(reservation?.toJSON())}`)
 

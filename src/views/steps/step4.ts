@@ -40,8 +40,10 @@ export async function step4(args: Step4Args) {
       // add duration to the start of reservation = time of reservaion ends
       const reservation = await ReservedSeats.findOneAndUpdate(
         {user: user._id, reservationFinished: false}, 
-        {$set: updateObj}
+        {$set: updateObj},
+        { new: true }
       )
+      reservation
       logger.debug(`Date updated: ${JSON.stringify(reservation?.toJSON())}`)
       const {message: nextStepMessage, isLastStep, keyboardMarkup} = await getNextSteps(reservation!)
       const respMessage = isLastStep ?  `${step4Responses.success} ${nextStepMessage}` : step4Responses.success

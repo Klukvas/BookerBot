@@ -29,7 +29,8 @@ export async function step2(args: Step2Args) {
   }else{
     const reservation = await ReservedSeats.findOneAndUpdate(
       {user: user._id, reservationFinished: false},
-      {$set: {step: 2, stepFinished: true, seatId: selectedSeat._id}}
+      {$set: {step: 2, stepFinished: true, seatId: selectedSeat._id}},
+      { new: true }
     )
     logger.debug(`Seat updated: ${JSON.stringify(reservation?.toJSON())}`)
     const {keyboardMarkup, isLastStep, message: nextStepMessage} = await getNextSteps(reservation!)
