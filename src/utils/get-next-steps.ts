@@ -1,16 +1,7 @@
-import { logger } from "../core/logger";
 import { IReserved, ReservedSeats } from "../models";
-import { IUser } from "../models/user";
+import { Keyboard, KeyboardButton } from "../types/keyboard";
 import { reservationFormatterBot } from "./formatters/reservation-formatter-bot";
 import { commandNames, nextStepMessages } from "./response-messages";
-type KeyboardButton = {
-  text: string;
-  callback_data: string;
-};
-
-type Keyboard = {
-  inline_keyboard: KeyboardButton[][];
-}
 
 type GetNextStepsResponse = {
   keyboardMarkup: Keyboard;

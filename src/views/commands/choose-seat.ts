@@ -8,6 +8,7 @@ import { seatFormatter } from "../../utils/formatters/seat-formatter";
 import { logger } from "../../core/logger";
 import { getNextSteps } from "../../utils/get-next-steps";
 import { createReservationIfNotExist } from "../create-reservation-if-not-exist";
+import { getSeatKeyboard } from "../../utils/get-seat-keyboard";
 
 
 type ChooseSeatArgs = {
@@ -52,6 +53,7 @@ export async function chooseSeat({ user, res, chatId }: ChooseSeatArgs) {
       if(reservation.reservedFrom && reservation.reservedTo){
        const foundAvailableSeats = await findAvailableSeats({currentReservation: reservation})
        if(foundAvailableSeats.length >= 1){
+          const keyboard = getSeatKeyboard({seats: foundAvailableSeats})
           await ReservedSeats.updateOne(
             { user: user._id, reservationFinished: false },
             { $set: { step: 2, stepFinished: false } }
@@ -60,7 +62,8 @@ export async function chooseSeat({ user, res, chatId }: ChooseSeatArgs) {
           await sendResponse({
             message: `${step2Responses.successCommand}${foundFormattedSeats}`,
             expressResp: res,
-            chatId
+            chatId,
+            reply_markup: keyboard
           })
         }else{
           //Todo: here should be suggestion

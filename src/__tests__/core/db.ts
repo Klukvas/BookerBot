@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
-import { Seat } from '../../models';
+import { ISeat, Seat } from '../../models';
 
 const mongod = MongoMemoryServer.create();
 
@@ -20,5 +20,5 @@ export const createSeats = async () => {
 
   await Seat.create(seats);
 
-  return seats;
+  return seats as ISeat[];
 }
