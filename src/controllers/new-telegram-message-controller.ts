@@ -31,7 +31,6 @@ export async function newTelegramMessageController(req: Request, res: Response) 
     return
   }
   const user = await CreateUserIfNotExist(message);
-  let currentReservation = await ReservedSeats.findOne({ user: user._id, reservationFinished: false });
   if(!message?.text){
     await sendResponse({
       message: responseMessages.unknownMessage,
@@ -40,6 +39,7 @@ export async function newTelegramMessageController(req: Request, res: Response) 
     })
     return
   }
+  let reservation;
   switch (message.text) {
 
     case commandNames.start:
@@ -55,18 +55,18 @@ export async function newTelegramMessageController(req: Request, res: Response) 
       break;
 
     case commandNames.chooseDuration:
-      await createReservationIfNotExist({user, step: 3})
-      await chooseDuration({ currentReservation, user, res, chatId });
+      reservation = await createReservationIfNotExist({user, step: 3})
+      await chooseDuration({ currentReservation: reservation, user, res, chatId });
       break;
 
     case commandNames.chooseSeat:
-      await createReservationIfNotExist({user, step: 2})
-      await chooseSeat({ user, currentReservation, res, chatId });
+      reservation = await createReservationIfNotExist({user, step: 2})
+      await chooseSeat({ user, currentReservation: reservation, res, chatId });
       break;
 
     case commandNames.chooseDate:
-      await createReservationIfNotExist({user, step: 4})
-      await chooseDate({ user, currentReservation, res, chatId });
+      reservation = await createReservationIfNotExist({user, step: 4})
+      await chooseDate({ user, currentReservation: reservation, res, chatId });
       break;
 
     case commandNames.help:
@@ -74,7 +74,8 @@ export async function newTelegramMessageController(req: Request, res: Response) 
       break;
 
     case commandNames.approveReservation:
-      await approveReservation({ user, currentReservation, res, chatId });
+      reservation = await ReservedSeats.findOne({ user: user._id, reservationFinished: false });
+      await approveReservation({ user, currentReservation: reservation, res, chatId });
       break;
 
     case commandNames.activeReservations:
@@ -82,6 +83,7 @@ export async function newTelegramMessageController(req: Request, res: Response) 
       break;
 
     default:
+      let currentReservation = await ReservedSeats.findOne({ user: user._id, reservationFinished: false });
       if (currentReservation?.step == 3 && !currentReservation.stepFinished) {
         logger.info(`User: ${user.username} send value for step 3`)
         await step3({ message , user, res, currentReservation });

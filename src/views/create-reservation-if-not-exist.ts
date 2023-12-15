@@ -22,7 +22,7 @@ export async function createReservationIfNotExist(
     const reservation = await ReservedSeats.create({
       user: user._id,
       step: step,
-      stepFinished: true,
+      stepFinished: stepFinished,
     });
     return reservation
   }
