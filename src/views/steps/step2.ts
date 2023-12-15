@@ -27,7 +27,7 @@ export async function step2(args: Step2Args) {
     // res.send(step2Responses.seatNotFound)
   }else{
     await ReservedSeats.updateOne(
-      {user: user._id},
+      {user: user._id, reservationFinished: false},
       {$set: {step: 2, stepFinished: true, seatId: selectedSeat._id}}
     )
     const {nextSteps, keyboard} = await getNextSteps(user)

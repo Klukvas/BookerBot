@@ -1,7 +1,7 @@
 import { Response } from "express"
 import { IReserved, ReservedSeats } from "../../models"
 import { IUser } from "../../models/user"
-import { validateDuration } from "../../utils/validate-duration"
+import { validateDuration } from "../../utils/validators/validate-duration"
 import { getNextSteps } from "../../utils/get-next-steps"
 import { addDurationToDate } from "../../utils/add-duration-to-date"
 import { dateToMoment } from "../../utils/date-to-moment"

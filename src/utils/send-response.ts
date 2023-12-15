@@ -22,7 +22,7 @@ export async function sendResponse({
   const params = {
     chat_id: chatId,
     text: message,
-    reply_markup: reply_markup
+    inline_keyboard: reply_markup
   };
   logger.debug(`Response body: ${params}`)
   try {

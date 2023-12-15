@@ -1,6 +1,6 @@
 import { Response } from "express"
 import { IUser } from "../../models/user"
-import { validateDatetime } from "../../utils/validate-datetime"
+import { validateDatetime } from "../../utils/validators/validate-datetime"
 import { IReserved, ReservedSeats } from "../../models"
 import { addDurationToDate } from "../../utils/add-duration-to-date"
 import { Moment } from "moment"
