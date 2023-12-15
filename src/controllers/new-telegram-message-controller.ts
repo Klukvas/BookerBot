@@ -18,8 +18,13 @@ import { logger } from "../core/logger";
 
 export async function newTelegramMessageController(req: Request, res: Response) {
   logger.debug(`Request body: ${JSON.stringify(req.body)}`)
-  const { message, edited_message }  = req.body;
+  const { message, edited_message, callback_query }  = req.body;
   if(edited_message) {
+    res.status(200).send('ok')
+    return
+  }
+  if(callback_query){
+    logger.debug(`callback_query: ${callback_query}`)
     res.status(200).send('ok')
     return
   }
