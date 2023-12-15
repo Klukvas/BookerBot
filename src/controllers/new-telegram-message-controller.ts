@@ -11,7 +11,6 @@ export async function newTelegramMessageController(req: Request, res: Response) 
 
   logger.debug(`edited_message: ${edited_message}`)
   logger.debug(`callback_query: ${callback_query}`)
-  logger.debug(`rest: ${rest}`)
   logger.debug(`message: ${message}`)
 
   if(edited_message) {
