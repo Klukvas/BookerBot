@@ -1,6 +1,6 @@
 import { Response } from "express";
 import { CallbackQury } from "../../types/callback-query"
-import { chosedSeatCallbackPartial, commandNames } from "../../utils/response-messages";
+import { cancelReservationCallbackPartial, chosedSeatCallbackPartial, commandNames } from "../../utils/response-messages";
 import { chooseDuration } from "../commands/choose-duration";
 import { chooseSeat } from "../commands/choose-seat";
 import { createReservation } from "../commands/create-reservation";
@@ -11,6 +11,9 @@ import { ReservedSeats } from "../../models";
 import { approveReservation } from "../commands/approve-reservation";
 import { activeReservations } from "../commands/active-reservations";
 import { step2 } from "../steps/step2";
+import { ObjectId } from "mongodb";
+import { sendResponse } from "../../utils/send-response";
+import { cancelReservation } from "../cancel-reservation";
 
 type HandleCallbackQueryArgs = {
   callback: CallbackQury
@@ -53,6 +56,9 @@ export async function handleCallbackQuery({callback, res}: HandleCallbackQueryAr
         if (currentReservation?.step == 2 && !currentReservation.stepFinished){
           await step2({ callback, user, res });
         }
+      }else if(callback.data.includes(cancelReservationCallbackPartial)){
+        let reservationId = new ObjectId(callback.data.split('-')[1])
+        await cancelReservation({reservationId, chatId, res})
       }
       break;
   }

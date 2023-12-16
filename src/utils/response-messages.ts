@@ -9,12 +9,18 @@ export const commandNames = {
     start: '/start',
     help: '/help',
     // core commands
-    activeReservations: '/activeReservations',
+    createReservation: '/create',
+    activeReservations: '/active',
+    cancelReservation: '/cancel',
+    // activeReservations: '/activeReservations',
+    // createReservation: '/createReservation'
     approveReservation: '/approveReservation',
-    createReservation: '/createReservation'
 }
 
 export const chosedSeatCallbackPartial = '/choosedSeat'
+
+export const cancelReservationCallbackPartial = '/cancel'
+
 
 export const valueAlreadySet = {
     duration: "Продолжительность уже выбрана.",
@@ -36,6 +42,13 @@ export const expectAnoutherValue = {
     expectSeat: 'Видимо, вы ошиблись. Ожидалось, что вы выберете место используя кнопки выше 👆',
     expectDate: 'Видимо, вы ошиблись. Ожидалось, что вы введете дату',
     expectDuration: 'Видимо, вы ошиблись. Ожидалось, что вы введете продолжительность'
+}
+
+export const cancelReservationResponses = {
+    reservationCanceled: 'Вы успешно отменили резервацию!💥',
+    reservationsNotFound: `Мы не нашли ваших резерваций.\nИспользуйте команду ${commandNames.createReservation} что бы создать первую.`,
+    selectedReservationNotFound: `Что-то пошло не так, мы не смогли найти эту резервацию. Поробуйте еще раз`,
+    reservationTooClose: `Резервация слишком близко к сегодняшней дате, для отмены свяжитесь с администратором - https://t.me/focixuxp`
 }
 
 export const step4Responses = {

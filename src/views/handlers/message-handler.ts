@@ -10,6 +10,7 @@ import { ReservedSeats } from "../../models";
 import { step3 } from "../steps/step3";
 import { step2 } from "../steps/step2";
 import { step4 } from "../steps/step4";
+import { cancelReservationCommand } from "../commands/cancel-resercation-command";
 
 type MessageHandlerArgs = {
   message: Message
@@ -37,7 +38,10 @@ export async function messageHandler({message, res}: MessageHandlerArgs) {
         expressResp: res
       })
       break;
-
+    
+    case commandNames.cancelReservation:
+      await cancelReservationCommand({ user, res, chatId })
+    
     case commandNames.createReservation:
       await createReservation({ user, res, chatId });
       break;
