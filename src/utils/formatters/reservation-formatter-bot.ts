@@ -21,12 +21,13 @@ export async function reservationFormatterBot(reservations: IReserved[], additio
     }
     if(item.seatId){
       const seat = await Seat.findOne({_id: item.seatId})
-      const price = calculatePrice({price: seat!.cost, duration: item.duration})
-      baseText+= `\tместо №: ${seat!.seatNumber}\n\tместо №: ${seat!.seatNumber}\n\t**Итого к оплате**: ${price}\n`
+      baseText+= `\tместо №: ${seat!.seatNumber}\n`
+      if(item.duration){
+        const price = calculatePrice({price: seat!.cost, duration: item.duration})
+        baseText+= `\t**Итого к оплате**: ${price}\n`
+      }
     }
-    
     formattedText += baseText
-
   }
   return formattedText
 }
