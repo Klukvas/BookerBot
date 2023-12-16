@@ -42,11 +42,11 @@ class AdminController{
   }
 
   static async createNewSeat(req: Request, res: Response){
-    const { name, type, cost } = req.body;
+    const { seatNumber, type, cost } = req.body;
     if(type){
-      await Seat.create({ name, type, cost });
+      await Seat.create({ seatNumber, type, cost });
     }else{
-      await Seat.create({ name, cost });
+      await Seat.create({ seatNumber, cost });
     }
     const allSeats = await Seat.find({})
     res.render('create-seat', { seatData: allSeats });

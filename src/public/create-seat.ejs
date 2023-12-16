@@ -16,8 +16,8 @@
 
   <!-- Form Section -->
   <form action="/admin/createSeat" method="post">
-    <label for="Name">Name of a new seat:</label>
-    <input type="text" id="name" name="name" required>
+    <label for="seatNumber">Number of a new seat:</label>
+    <input type="number" id="seatNumber" name="seatNumber" required>
     <br>
     <label for="amount">Amount:</label>
     <input type="number" id="amount" name="cost" required>
@@ -37,7 +37,7 @@
         <tr>
           <th></th>
           <th>ID</th>
-          <th>Name</th>
+          <th>Seat number</th>
           <th>Cost</th>
           <th>Type</th>
         </tr>
@@ -54,7 +54,7 @@
               </form>
             </td>
             <td><%= seat.id %></td>
-            <td><%= seat.name %></td>
+            <td><%= seat.seatNumber %></td>
             <td><%= seat.cost %></td>
             <td><%= seat.type %></td>
           </tr>

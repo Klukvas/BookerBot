@@ -56,7 +56,7 @@ describe("Core integration cases", () => {
       step2Responses.success,
       nextStepMessages.pickDate,
     ]
-    await sendUserResponseToBot({request, expectedTextList: expectedStep2Response, userMessage: seats[0].name})
+    await sendUserResponseToBot({request, expectedTextList: expectedStep2Response, userMessage: String(seats[0].seatNumber)})
 
     await step4ChooseDateCommand({request})
     const expectedStep4Response = [
@@ -90,7 +90,7 @@ describe("Core integration cases", () => {
       step2Responses.success,
       nextStepMessages.noStepsLeft,
     ]
-    await sendUserResponseToBot({request, expectedTextList: expectedStep2Response, userMessage: seats[0].name})
+    await sendUserResponseToBot({request, expectedTextList: expectedStep2Response, userMessage: String(seats[0].seatNumber)})
 
     
 
@@ -105,7 +105,7 @@ describe("Core integration cases", () => {
       nextStepMessages.pickDate,
       nextStepMessages.pickDuration,
     ]
-    await sendUserResponseToBot({request, expectedTextList: expectedStep2Response, userMessage: seats[0].name})
+    await sendUserResponseToBot({request, expectedTextList: expectedStep2Response, userMessage: String(seats[0].seatNumber)})
 
     await step3ChooseDurationCommand({request})
     const expectedStep3Response = [
@@ -132,7 +132,7 @@ describe("Core integration cases", () => {
       nextStepMessages.pickDate,
       nextStepMessages.pickDuration,
     ]
-    await sendUserResponseToBot({request, expectedTextList: expectedStep2Response, userMessage: seats[0].name})
+    await sendUserResponseToBot({request, expectedTextList: expectedStep2Response, userMessage: String(seats[0].seatNumber)})
 
     await step3ChooseDurationCommand({request})
     const expectedStep3Response = [
@@ -159,7 +159,7 @@ describe("Core integration cases", () => {
       nextStepMessages.pickDate,
       nextStepMessages.pickDuration,
     ]
-    await sendUserResponseToBot({request, expectedTextList: expectedStep2Response, userMessage: seats[0].name})
+    await sendUserResponseToBot({request, expectedTextList: expectedStep2Response, userMessage: String(seats[0].seatNumber)})
 
     await step4ChooseDateCommand({request})
     const expectedStep4Response = [
@@ -193,7 +193,7 @@ describe("Core integration cases", () => {
       step2Responses.success,
       nextStepMessages.pickDuration
     ]
-    await sendUserResponseToBot({request, expectedTextList: expectedStep2Response, userMessage: seats[0].name})
+    await sendUserResponseToBot({request, expectedTextList: expectedStep2Response, userMessage: String(seats[0].seatNumber)})
 
     await step3ChooseDurationCommand({request})
     const expectedStep3Response = [
@@ -227,7 +227,7 @@ describe("Core integration cases", () => {
       step2Responses.success,
       nextStepMessages.noStepsLeft
     ]
-    await sendUserResponseToBot({request, expectedTextList: expectedStep2Response, userMessage: seats[0].name})
+    await sendUserResponseToBot({request, expectedTextList: expectedStep2Response, userMessage: String(seats[0].seatNumber)})
 
     await step5ApproveReservation({request})
   });

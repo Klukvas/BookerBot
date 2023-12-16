@@ -4,6 +4,7 @@ import { IUser } from "../../models/user";
 import { step1Responses } from "../../utils/response-messages";
 import env from "../../core/env";
 import { sendResponse } from "../../utils/send-response";
+import { getNextSteps } from "../../utils/get-next-steps";
 
 type CreateReservationCommandArgs = {
   res: Response
@@ -27,18 +28,11 @@ export async function createReservation({user, res, chatId}: CreateReservationCo
 
   // Delete any existing reservations in progress and create a new one
   await ReservedSeats.deleteMany({ user: user._id, reservationFinished: false });
-  await ReservedSeats.create({
+  const reservation = await ReservedSeats.create({
     user: user._id,
     step: 1,
     stepFinished: true,
-  });
-  // const keyboard = {
-  //   inline_keyboard: [
-  //     [{ text: 'Button 1', callback_data: 'button1' }],
-  //     [{ text: 'Button 2', callback_data: 'button2' }],
-  //   ],
-  // };
-  await sendResponse({message: step1Responses.success, chatId, expressResp: res})
-  // await sendResponse({message: step1Responses.success, chatId, expressResp: res, reply_markup: keyboard})
-  // res.status(200).send(step1Responses.success);
+  })
+  const { keyboardMarkup } = await getNextSteps(reservation)
+  await sendResponse({message: step1Responses.success, chatId, expressResp: res, reply_markup: keyboardMarkup})
 }

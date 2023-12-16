@@ -1,17 +1,18 @@
-import {Schema, model} from 'mongoose'
+import {Document, Schema, model} from 'mongoose'
 
 // const allowedSeatTypes = process.env.ALLOWED_SEAT_TYPES?.split(' ') || ['Regual', 'Pro']
 
-interface ISeat{
-    name: string
+interface ISeat extends Document {
+    seatNumber: number
     type: string
     cost: number
 }
 
 const seatSchema = new Schema<ISeat>({
-    name: {
-        type: String, 
+    seatNumber: {
+        type: Number, 
         required: true,
+        unique: true
     },
     type: {
         type: String, 

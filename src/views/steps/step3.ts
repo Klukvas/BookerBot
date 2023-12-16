@@ -9,6 +9,7 @@ import { Moment } from "moment"
 import { Message } from "../../types/new-message"
 import { step3Responses } from "../../utils/response-messages"
 import { sendResponse } from "../../utils/send-response"
+import { logger } from "../../core/logger"
 
 type Step3Args = {
   message: Message
@@ -31,16 +32,20 @@ export async function step3(args: Step3Args) {
         )
         updateObj['reservedTo'] = reservedTo
       }
-      await ReservedSeats.updateOne(
-        {user: user._id},
-        { $set: updateObj }
+      const reservation = await ReservedSeats.findOneAndUpdate(
+        {user: user._id, reservationFinished: false},
+        { $set: updateObj },
+        { new: true }
       )
-      const {nextSteps, keyboard} = await getNextSteps(user)
+      logger.debug(`Duration updated: ${JSON.stringify(reservation?.toJSON())}`)
+
+      const {keyboardMarkup, isLastStep, message: nextStepMessage} = await getNextSteps(reservation!)
+      const respMessage = isLastStep ?  `${step3Responses.success} ${nextStepMessage}` : step3Responses.success
       await sendResponse({
-        message: `${step3Responses.success}${nextSteps}`,
+        message: respMessage,
         expressResp: res,
         chatId: message.chat.id,
-        reply_markup: keyboard
+        reply_markup: keyboardMarkup
       })
       // res.status(200).send(`${step3Responses.success}${nextSteps}`)
     }else{

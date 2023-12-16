@@ -7,13 +7,14 @@ import { calculatePrice } from "../../utils/calculate-price";
 import { getNextSteps } from "../../utils/get-next-steps";
 
 type ApproveReservationArgs = {
-  currentReservation: IReserved | null
   user: IUser
   res: Response
   chatId: number
 };
 
-export async function approveReservation({currentReservation, user, res, chatId}: ApproveReservationArgs) {
+export async function approveReservation({ user, res, chatId}: ApproveReservationArgs) {
+  const currentReservation = await ReservedSeats.findOne({ user: user._id, reservationFinished: false });
+
   if(!currentReservation){
     await sendResponse({
       message: responseMessages.reservationNotFound,
@@ -24,13 +25,12 @@ export async function approveReservation({currentReservation, user, res, chatId}
   }else{
 
     if(!currentReservation.reservedFrom || !currentReservation.seatId || !currentReservation.duration){
-      // todo: fix it
-      const {nextSteps, keyboard} = await getNextSteps(undefined, currentReservation)
+      const { keyboardMarkup } = await getNextSteps(currentReservation)
       await sendResponse({
-        message: `${responseMessages.reservationNotReadyForApprove} ${nextSteps}`,
+        message: `${responseMessages.reservationNotReadyForApprove}`,
         expressResp: res,
         chatId,
-        reply_markup: keyboard
+        reply_markup: keyboardMarkup
       })
     }
 

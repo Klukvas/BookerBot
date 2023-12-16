@@ -14,7 +14,7 @@ export async function step2ChooseSeatCommand(args: Step2ChooseSeatCommandArgs) {
   const {response, repliedMessage} = await sendRequestToBot({request, message: postMessage})
   expect(repliedMessage).toContain('Отлично! Давайте выберем место. Вот список всех мест:')
   for(const seat of seats){
-    expect(repliedMessage).toContain(seat.name)
+    expect(repliedMessage).toContain(seat.seatNumber)
   }
   expect(response.statusCode).toBe(200)
     

@@ -12,7 +12,7 @@ export async function reservationFormatterBot(reservations: IReserved[]){
       \tid: ${item._id}\n
       \tпродолжительность: ${item.duration}\n
       \tзарезервировано на: ${item.reservedFrom}\n
-      \tместо: ${seat!.name}
+      \tместо №: ${seat!.seatNumber}
       \t**Итого к оплате**: ${price}
     `
     formattedText += reservation

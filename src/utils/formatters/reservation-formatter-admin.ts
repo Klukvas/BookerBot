@@ -4,7 +4,7 @@ import { calculatePrice } from "../calculate-price";
 import { dateToMoment } from "../date-to-moment";
 
 export async function reservationFormatterAdmin(reservation: IReserved){
-  const seatName = (await Seat.findOne({_id: reservation.seatId}))?.name
+  const seatName = (await Seat.findOne({_id: reservation.seatId}))?.seatNumber
   const rawUser = await User.findOne({_id: reservation.user})
   const user = rawUser?.username || rawUser?.lastName || rawUser?.first_name
   const prettyReservedFrom = reservation.reservedFrom ? 
