@@ -15,7 +15,7 @@ type CancelReservationArgs = {
 export async function cancelReservation({reservationId, res, chatId}: CancelReservationArgs) {
   
   const reservation = await ReservedSeats.findById(reservationId);
-
+  
   if(!reservation){
     await sendResponse({
       expressResp: res,
@@ -23,6 +23,12 @@ export async function cancelReservation({reservationId, res, chatId}: CancelRese
       message: cancelReservationResponses.selectedReservationNotFound
     })
   }else{
+    logger.debug(`
+      user: ${reservation.user}
+      In process of cancel reservation
+      reservation finished: ${reservation.reservationFinished}
+
+    `)
     if(reservation.reservationFinished){
       const targetDate = moment(reservation.reservedFrom).tz('UTC');
       const currentDate = moment().tz('UTC');
