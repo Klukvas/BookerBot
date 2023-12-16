@@ -41,6 +41,7 @@ export async function messageHandler({message, res}: MessageHandlerArgs) {
     
     case commandNames.cancelReservation:
       await cancelReservationCommand({ user, res, chatId })
+      break;
     
     case commandNames.createReservation:
       await createReservation({ user, res, chatId });
