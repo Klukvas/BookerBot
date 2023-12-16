@@ -5,23 +5,28 @@ export async function reservationFormatterBot(reservations: IReserved[], additio
   let formattedText = ''
   let delimiter = '-'.repeat(12)
   for(const item of reservations){
-    const seat = await Seat.findOne({_id: item.seatId})
-    let price = null;
-    if(seat){
-      price = calculatePrice({price: seat.cost, duration: item.duration})
+    
+    let baseText = `${delimiter}\n\tid: ${item._id}\n`
+
+    if(additionalData){
+      baseText += additionalData
+    }
+
+    if(item.duration){
+      baseText+=`\tпродолжительность: ${item.duration}\n`
+    }
+
+    if(item.reservedFrom){
+      baseText+=`\tзарезервировано на: ${item.reservedFrom}\n`
+    }
+    if(item.seatId){
+      const seat = await Seat.findOne({_id: item.seatId})
+      const price = calculatePrice({price: seat!.cost, duration: item.duration})
+      baseText+= `\tместо №: ${seat!.seatNumber}\n\tместо №: ${seat!.seatNumber}\n\t**Итого к оплате**: ${price}\n`
     }
     
-    let formatterReservation =`${delimiter}\n`;
-    if(additionalData){
-      formatterReservation += additionalData
-    }
-    formatterReservation=`
-    \tid: ${item._id}\n
-    \tпродолжительность: ${item.duration}\n
-    \tзарезервировано на: ${item.reservedFrom}\n
-    \tместо №: ${seat!.seatNumber}`
-    if(price) formatterReservation += `\t**Итого к оплате**: ${price}\n`
-    formattedText += formatterReservation
+    formattedText += baseText
+
   }
   return formattedText
 }
