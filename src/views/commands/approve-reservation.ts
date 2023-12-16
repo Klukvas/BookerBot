@@ -1,18 +1,11 @@
-import { Response } from "express";
-import { IReserved, ReservedSeats, Seat } from "../../models";
-import { IUser, User } from "../../models/user";
+import { ReservedSeats, Seat } from "../../models";
 import { responseMessages } from "../../utils/response-messages";
 import { sendResponse } from "../../utils/send-response";
 import { calculatePrice } from "../../utils/calculate-price";
 import { getNextSteps } from "../../utils/get-next-steps";
+import { DefaultCommandProcessArgs } from "../../types/default-command-process-args";
 
-type ApproveReservationArgs = {
-  user: IUser
-  res: Response
-  chatId: number
-};
-
-export async function approveReservation({ user, res, chatId}: ApproveReservationArgs) {
+export async function approveReservation({ user, res, chatId}: DefaultCommandProcessArgs) {
   const currentReservation = await ReservedSeats.findOne({ user: user._id, reservationFinished: false });
 
   if(!currentReservation){

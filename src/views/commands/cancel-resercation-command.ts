@@ -1,18 +1,12 @@
 import { Response } from "express";
 import { ReservedSeats } from "../../models";
-import { IUser } from "../../models/user";
 import { sendResponse } from "../../utils/send-response";
 import { cancelReservationResponses } from "../../utils/response-messages";
 import { reservationFormatterBot } from "../../utils/formatters/reservation-formatter-bot";
 import { getReservationKeyboard } from "../../utils/get-reservation-keyboard";
+import { DefaultCommandProcessArgs } from "../../types/default-command-process-args";
 
-type CancelReservationCommandArgs = {
-  res: Response
-  user: IUser
-  chatId: number
-};
-
-export async function cancelReservationCommand({user, res, chatId}: CancelReservationCommandArgs) {
+export async function cancelReservationCommand({user, res, chatId}: DefaultCommandProcessArgs) {
   const userReservations = await ReservedSeats.find({user: user._id})
   if(userReservations){
       const reservationList = [];

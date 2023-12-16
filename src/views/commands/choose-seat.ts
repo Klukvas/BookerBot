@@ -1,6 +1,4 @@
-import { Response } from "express";
-import { IReserved, ReservedSeats, Seat } from "../../models";
-import { IUser } from "../../models/user";
+import { ReservedSeats, Seat } from "../../models";
 import { findAvailableSeats } from "../../utils/find-available-seats";
 import { expectAnoutherValue, step2Responses, valueAlreadySet } from "../../utils/response-messages";
 import { sendResponse } from "../../utils/send-response";
@@ -9,15 +7,9 @@ import { logger } from "../../core/logger";
 import { getNextSteps } from "../../utils/get-next-steps";
 import { createReservationIfNotExist } from "../create-reservation-if-not-exist";
 import { getSeatKeyboard } from "../../utils/get-seat-keyboard";
+import { DefaultCommandProcessArgs } from "../../types/default-command-process-args";
 
-
-type ChooseSeatArgs = {
-  user: IUser;
-  res: Response;
-  chatId: number
-};
-
-export async function chooseSeat({ user, res, chatId }: ChooseSeatArgs) {
+export async function chooseSeat({ user, res, chatId }: DefaultCommandProcessArgs) {
   let allSeats = await Seat.find({});
   let formattedAllSeats = seatFormatter(allSeats)
   const {reservation, isNew} = await createReservationIfNotExist({user, step: 2})

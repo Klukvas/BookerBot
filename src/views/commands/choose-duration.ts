@@ -1,18 +1,11 @@
-import { Response } from "express";
-import { IReserved, ReservedSeats } from "../../models";
-import { IUser } from "../../models/user";
+import { ReservedSeats } from "../../models";
 import { expectAnoutherValue, responseMessages, step3Responses, valueAlreadySet } from "../../utils/response-messages";
 import { sendResponse } from "../../utils/send-response";
 import { getNextSteps } from "../../utils/get-next-steps";
 import { createReservationIfNotExist } from "../create-reservation-if-not-exist";
+import { DefaultCommandProcessArgs } from "../../types/default-command-process-args";
 
-type ChooseDuration = {
-  user: IUser;
-  res: Response;
-  chatId: number
-};
-
-export async function chooseDuration( { user, res, chatId }: ChooseDuration) {
+export async function chooseDuration( { user, res, chatId }: DefaultCommandProcessArgs) {
   const {reservation, isNew} = await createReservationIfNotExist({user, step: 3})
   if(isNew){
     // if we created a new one -> we do not need to proccess it

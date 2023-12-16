@@ -1,18 +1,11 @@
-import { Response } from "express";
-import { IReserved, ReservedSeats } from "../../models";
-import { IUser } from "../../models/user";
-import { expectAnoutherValue, responseMessages, step4Responses, valueAlreadySet } from "../../utils/response-messages";
+import { ReservedSeats } from "../../models";
+import { expectAnoutherValue, step4Responses, valueAlreadySet } from "../../utils/response-messages";
 import { sendResponse } from "../../utils/send-response";
 import { getNextSteps } from "../../utils/get-next-steps";
 import { createReservationIfNotExist } from "../create-reservation-if-not-exist";
+import { DefaultCommandProcessArgs } from "../../types/default-command-process-args";
 
-type ChooseDate = {
-  user: IUser;
-  res: Response,
-  chatId: number
-}
-
-export async function chooseDate({ user, res, chatId }: ChooseDate) {
+export async function chooseDate({ user, res, chatId }: DefaultCommandProcessArgs) {
   const {reservation, isNew} = await createReservationIfNotExist({user, step: 4})
   // if it is a recently created reservation -> skip processing
   if(isNew){

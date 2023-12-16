@@ -1,18 +1,11 @@
-import { Response } from "express";
 import { ReservedSeats } from "../../models";
-import { IUser } from "../../models/user";
 import { step1Responses } from "../../utils/response-messages";
 import env from "../../core/env";
 import { sendResponse } from "../../utils/send-response";
 import { getNextSteps } from "../../utils/get-next-steps";
+import { DefaultCommandProcessArgs } from "../../types/default-command-process-args";
 
-type CreateReservationCommandArgs = {
-  res: Response
-  user: IUser
-  chatId: number
-};
-
-export async function createReservation({user, res, chatId}: CreateReservationCommandArgs) {
+export async function createReservation({user, res, chatId}: DefaultCommandProcessArgs) {
   // Remove expired reservations
   await ReservedSeats.deleteMany({ user: user._id, reservedTo: { $lte: new Date() }, reservationFinished: true });
 
