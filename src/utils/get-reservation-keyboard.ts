@@ -24,4 +24,5 @@ export async function getReservationKeyboard({reservations, reservationPerRow=3}
       currentRow = [];
     }
   });
+  return {inline_keyboard: reservationMatrix};
 }
