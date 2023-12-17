@@ -33,10 +33,9 @@ export async function step3({message, user, res, currentReservation}: Step3Args)
         )
         logger.debug(`
         id db: ${currentReservation.reservedFrom}
-        moment: ${reservedFromMoment}
-        moment utc: ${moment.tz(currentReservation.reservedFrom, 'UTC')}
-        moment utc 2: ${moment.utc(currentReservation.reservedFrom)}
-        moment Europe/Kiev: ${moment.tz(currentReservation.reservedFrom, 'Europe/Kiev')}
+        from moment: ${reservedFromMoment}
+        to moment: ${reservedTo}
+        to moment utc: ${reservedTo.tz('UTC')}
         `)
         if(
           (reservedTo.hours() == env.closeHour && reservedTo.minutes() !== 0)
