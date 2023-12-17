@@ -27,22 +27,11 @@ export async function step3(args: Step3Args) {
       let updateObj: { reservedTo?: Moment, step: number, duration: string, stepFinished: boolean} = 
         { step: 3, duration: message.text, stepFinished: true}
       if(currentReservation.reservedFrom){
-        const reservedFromMoment = moment(currentReservation.reservedFrom)
+        const reservedFromMoment = moment.utc(currentReservation.reservedFrom)
         const reservedTo = addDurationToDate(
           reservedFromMoment,
           message.text
         )
-        logger.debug(`
-        currentReservation.reservedFrom: ${currentReservation.reservedFrom}
-        
-        currentReservation.reservedFrom wiht utc: ${moment.utc(currentReservation.reservedFrom)}
-
-        reservedFromMoment: ${reservedFromMoment}
-
-        reservedTo: ${reservedTo}
-        reservedTo.date(): ${reservedTo.date()}
-        reservedFromMoment.date(): ${reservedFromMoment.date()}
-        `)
         if(
           (reservedTo.hours() == env.closeHour && reservedTo.minutes() !== 0)
           ||
