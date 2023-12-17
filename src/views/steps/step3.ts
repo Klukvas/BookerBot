@@ -37,6 +37,7 @@ export async function step3(args: Step3Args) {
           reservedTo.hours(): ${reservedTo.hours()}
           reservedTo.minutes(): ${reservedTo.minutes()}
           reservedTo.day(): ${reservedTo.day()}
+          reservedFromMoment.day(): ${reservedFromMoment.day()}
         `)
         if(
           (reservedTo.hours() == env.closeHour && reservedTo.minutes() !== 0)
