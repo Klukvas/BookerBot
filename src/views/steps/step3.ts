@@ -35,6 +35,7 @@ export async function step3({message, user, res, currentReservation}: Step3Args)
         id db: ${currentReservation.reservedFrom}
         moment: ${reservedFromMoment}
         moment utc: ${moment.tz(currentReservation.reservedFrom, 'UTC')}
+        moment utc 2: ${moment.utc(currentReservation.reservedFrom)}
         moment Europe/Kiev: ${moment.tz(currentReservation.reservedFrom, 'Europe/Kiev')}
         `)
         if(
