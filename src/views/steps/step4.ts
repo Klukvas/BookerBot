@@ -3,7 +3,7 @@ import { IUser } from "../../models/user"
 import { validateDatetime } from "../../utils/validators/validate-datetime"
 import { IReserved, ReservedSeats } from "../../models"
 import { addDurationToDate } from "../../utils/add-duration-to-date"
-import { Moment } from "moment"
+import moment, { Moment } from "moment"
 import { responseMessages, step3Responses, step4Responses } from "../../utils/response-messages"
 import { getNextSteps } from "../../utils/get-next-steps"
 import { Message } from "../../types/new-message"
@@ -30,18 +30,19 @@ export async function step4(args: Step4Args) {
         reservedFrom: validatedDateTime.value
       });
     }else{
-      const updateObj: { reservedFrom: Moment; reservedTo?: Moment, stepFinished: boolean} = {
+      const updateObj: { reservedFrom: string; reservedTo?: Moment, stepFinished: boolean} = {
         reservedFrom: validatedDateTime.value,
         stepFinished: true
       };
       if(currentReservation.duration){
-        const reservedTo = addDurationToDate(validatedDateTime.value, currentReservation.duration)
+        const reservedFrom = moment(validatedDateTime.value)
+        const reservedTo = addDurationToDate(reservedFrom, currentReservation.duration)
         if(
           (reservedTo.hours() == env.closeHour && reservedTo.minutes() !== 0)
           ||
           reservedTo.hours() > env.closeHour
           ||
-          reservedTo.date() !== validatedDateTime.value.date()
+          reservedTo.date() !== reservedFrom.date()
         ){
          await sendResponse({
           expressResp: res,

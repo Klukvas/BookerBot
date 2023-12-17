@@ -1,11 +1,12 @@
 import env from "../../core/env";
+import { dateToMoment } from "../date-to-moment";
 import { responseMessages, step4Responses } from "../response-messages";
 import moment, {Moment} from 'moment-timezone'
 
 
 type ValidateDatetimeSuccessResult = {
   isValid: true
-  value: Moment
+  value: string
 }
 
 type ValidateDatetimeErrorResult = {
@@ -16,7 +17,7 @@ type ValidateDatetimeErrorResult = {
 type ValidateDatetimeResult = ValidateDatetimeErrorResult | ValidateDatetimeSuccessResult
 
 export function validateDatetime(messageText: string): ValidateDatetimeResult {
-  let reservedFrom = moment.utc(messageText, ['DD.MM.YYYY HH:mm', 'DD/MM/YYYY HH:mm'], true);
+  let reservedFrom = dateToMoment(messageText);
 
   // Check if the format is valid
   if (reservedFrom.isValid()) {
@@ -41,7 +42,7 @@ export function validateDatetime(messageText: string): ValidateDatetimeResult {
           // Date is within the allowed range
           return {
             isValid: true,
-            value: reservedFrom
+            value: reservedFrom.toISOString()
           }
         }
         
