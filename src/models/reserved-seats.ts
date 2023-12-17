@@ -52,6 +52,9 @@ const ReservedSeatsSchema = new mongoose.Schema<IReserved>({
   reservationFinished: { type: Boolean, default: false },
 });
 
+ReservedSeatsSchema.set('timestamps', false);
+
+
 const ReservedSeats = mongoose.model<IReserved>('ReservedSeats', ReservedSeatsSchema);
 
 

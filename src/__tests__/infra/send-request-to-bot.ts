@@ -17,7 +17,7 @@ type SendRequestToBotResult = {
 export async function sendRequestToBot(args: SendRequestToBotArgs): Promise<SendRequestToBotResult>{
   const {request, message = generateTelegramMessage()} = args
   sendResponseMock.setupMock()
-  const url = '/new-message'
+  const url = '/'
   const response = await request
       .post(url)
       .send(message)

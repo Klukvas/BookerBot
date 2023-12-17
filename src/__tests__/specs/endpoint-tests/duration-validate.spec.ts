@@ -12,7 +12,7 @@ import { ISeat } from "../../../models";
 import { nextStepMessages, step2Responses, step3Responses, step4Responses } from "../../../utils/response-messages";
 import { sendUserResponseToBot } from "../../interface/send-user-response-to-bot";
 import { addDaysToCurrentDay } from "../../infra/add-days-to-current-day";
-import moment from "moment";
+import moment from "moment-timezone";
 
 
 moment.tz.setDefault('UTC');
@@ -66,5 +66,14 @@ describe("Core integration cases", () => {
     await step3ChooseDurationCommand({request})
     await sendUserResponseToBot({request, expectedTextList: [step3Responses.success], userMessage: "11:30"})
   });
+
+  it.only('Duration makes reserveTo cross with closeDate', async () => {
+    await step1StartNewReservation({request})
+    await step4ChooseDateCommand({request})
+    const tomorrow = moment().add(1, 'days').set({ hour: 19, minute: 30, second: 0, millisecond: 0 }).format('DD/MM/YYYY HH:mm');
+    console.log(`tomorrow: ${tomorrow}`)
+    await sendUserResponseToBot({request, expectedTextList: [step3Responses.success], userMessage: `${tomorrow}`})
+
+  })
 
 });

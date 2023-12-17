@@ -12,7 +12,7 @@ import { ISeat } from "../../../models";
 import { nextStepMessages, step2Responses, step3Responses, step4Responses } from "../../../utils/response-messages";
 import { sendUserResponseToBot } from "../../interface/send-user-response-to-bot";
 import { addDaysToCurrentDay } from "../../infra/add-days-to-current-day";
-import moment from "moment";
+import moment from "moment-timezone";
 
 
 moment.tz.setDefault('UTC');

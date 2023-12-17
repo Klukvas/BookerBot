@@ -5,7 +5,7 @@ import { validateDuration } from "../../utils/validators/validate-duration"
 import { getNextSteps } from "../../utils/get-next-steps"
 import { addDurationToDate } from "../../utils/add-duration-to-date"
 import { dateToMoment } from "../../utils/date-to-moment"
-import moment, { Moment } from "moment"
+import moment, { Moment } from "moment-timezone"
 import { Message } from "../../types/new-message"
 import { step3Responses } from "../../utils/response-messages"
 import { sendResponse } from "../../utils/send-response"
@@ -20,23 +20,22 @@ type Step3Args = {
 
 }
 
-export async function step3(args: Step3Args) {
-  const {message, user, res, currentReservation} = args
+export async function step3({message, user, res, currentReservation}: Step3Args) {
   const isValidDuration = validateDuration(message.text)
     if(isValidDuration){
       let updateObj: { reservedTo?: Moment, step: number, duration: string, stepFinished: boolean} = 
         { step: 3, duration: message.text, stepFinished: true}
       if(currentReservation.reservedFrom){
-        const reservedFromMoment = moment.utc(currentReservation.reservedFrom)
+        const reservedFromMoment = moment(currentReservation.reservedFrom)
         const reservedTo = addDurationToDate(
           reservedFromMoment,
           message.text
         )
         logger.debug(`
-        reservedFromMoment: ${reservedFromMoment}
-        reservedTo: ${reservedTo}
-        reservedTo.date(): ${reservedTo.date()}
-        reservedFromMoment.date(): ${reservedFromMoment.date()}
+        id db: ${currentReservation.reservedFrom}
+        moment: ${reservedFromMoment}
+        moment utc: ${moment.tz(currentReservation.reservedFrom, 'UTC')}
+        moment Europe/Kiev: ${moment.tz(currentReservation.reservedFrom, 'Europe/Kiev')}
         `)
         if(
           (reservedTo.hours() == env.closeHour && reservedTo.minutes() !== 0)

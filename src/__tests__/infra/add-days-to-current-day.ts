@@ -1,4 +1,4 @@
-import moment from "moment";
+import moment from "moment-timezone";
 
 export const addDaysToCurrentDay = (days: number=1, hour: number=12, minute: number = 30) => {
   const today = moment();

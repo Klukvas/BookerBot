@@ -3,7 +3,7 @@ import { ReservedSeats } from "../models"
 import { sendResponse } from "../utils/send-response";
 import { Response } from "express";
 import { cancelReservationResponses } from "../utils/response-messages";
-import moment from "moment";
+import moment from "moment-timezone";
 import { logger } from "../core/logger";
 
 type CancelReservationArgs = {
