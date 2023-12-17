@@ -10,6 +10,7 @@ import { Message } from "../../types/new-message"
 import { step3Responses } from "../../utils/response-messages"
 import { sendResponse } from "../../utils/send-response"
 import { logger } from "../../core/logger"
+import env from "../../core/env"
 
 type Step3Args = {
   message: Message
@@ -30,6 +31,18 @@ export async function step3(args: Step3Args) {
           dateToMoment(currentReservation.reservedFrom),
           message.text
         )
+        if(
+          (reservedTo.hours() == env.closeHour && reservedTo.minutes() !== 0)
+          ||
+          reservedTo.hours() > env.closeHour
+        ){
+         await sendResponse({
+          expressResp: res,
+          message: step3Responses.tooCloseToCloseTime,
+          chatId: message.chat.id
+         }) 
+         return
+        }
         updateObj['reservedTo'] = reservedTo
       }
       const reservation = await ReservedSeats.findOneAndUpdate(

@@ -98,6 +98,7 @@ export const step3Responses = {
         ${this._validExamples}\n
         Примеры невалидных значений: 0:20, 2:31, 5:15.`
     },
+    tooCloseToCloseTime: `Вы не можете выбрать эту продолжительность поскольку она пересекаеться с временем закрытия клуба(${env.closeHour}:00)`,
     _validExamples: 'Примеры валидных значений: 1:30, 2:00, 4:30.',
     success: 'Отлично! Продолжительность выбрана.',
     get invalidDuration(){

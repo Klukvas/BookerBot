@@ -9,6 +9,7 @@ class Env{
   protected readonly _botToken: string
   protected readonly _maxReservationFromHour: number
   protected readonly _userHardToken: string
+  protected readonly _close_hour: number
   
   constructor(){
     dotenv.config();
@@ -20,6 +21,7 @@ class Env{
     this._botToken = process.env.TELEGRAM_API_TOKEN || ''
     this._maxReservationFromHour = Number(process.env.MAX_RESERVATION_FROM_HOUR) || 20
     this._userHardToken = process.env.HARD_USER_TOKEN || ''
+    this._close_hour = Number(process.env.CLOSE_HOUR) || 21
   }
   get userHardToken(){
     if(!this._userHardToken){
@@ -27,6 +29,8 @@ class Env{
     }
     return this._userHardToken
   }
+
+  get closeHour(){return this._close_hour}
 
   get maxReservationFromHour(){return this._maxReservationFromHour}
 
