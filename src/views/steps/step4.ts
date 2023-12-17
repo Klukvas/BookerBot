@@ -4,11 +4,12 @@ import { validateDatetime } from "../../utils/validators/validate-datetime"
 import { IReserved, ReservedSeats } from "../../models"
 import { addDurationToDate } from "../../utils/add-duration-to-date"
 import { Moment } from "moment"
-import { responseMessages, step4Responses } from "../../utils/response-messages"
+import { responseMessages, step3Responses, step4Responses } from "../../utils/response-messages"
 import { getNextSteps } from "../../utils/get-next-steps"
 import { Message } from "../../types/new-message"
 import { sendResponse } from "../../utils/send-response"
 import { logger } from "../../core/logger"
+import env from "../../core/env"
 
 type Step4Args = {
   user: IUser
@@ -35,7 +36,23 @@ export async function step4(args: Step4Args) {
       };
       if(currentReservation.duration){
         const reservedTo = addDurationToDate(validatedDateTime.value, currentReservation.duration)
-        updateObj.reservedTo = reservedTo
+        if(
+          (reservedTo.hours() == env.closeHour && reservedTo.minutes() !== 0)
+          ||
+          reservedTo.hours() > env.closeHour
+          ||
+          reservedTo.date() !== validatedDateTime.value.date()
+        ){
+         await sendResponse({
+          expressResp: res,
+          message: step3Responses.tooCloseToCloseTime,
+          chatId: message.chat.id
+         }) 
+         return
+        }else{
+          updateObj.reservedTo = reservedTo
+        }
+        
       }
       // add duration to the start of reservation = time of reservaion ends
       const reservation = await ReservedSeats.findOneAndUpdate(

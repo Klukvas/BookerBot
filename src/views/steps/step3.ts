@@ -32,19 +32,12 @@ export async function step3(args: Step3Args) {
           reservedFromMoment,
           message.text
         )
-        logger.debug(`
-          step3: reservedTo: ${reservedTo}
-          reservedTo.hours(): ${reservedTo.hours()}
-          reservedTo.minutes(): ${reservedTo.minutes()}
-          reservedTo.day(): ${reservedTo.day()}
-          reservedFromMoment.day(): ${reservedFromMoment.day()}
-        `)
         if(
           (reservedTo.hours() == env.closeHour && reservedTo.minutes() !== 0)
           ||
           reservedTo.hours() > env.closeHour
           ||
-          reservedTo.day() !== reservedFromMoment.day()
+          reservedTo.date() !== reservedFromMoment.date()
         ){
          await sendResponse({
           expressResp: res,
