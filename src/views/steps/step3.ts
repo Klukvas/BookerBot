@@ -26,7 +26,7 @@ export async function step3({message, user, res, currentReservation}: Step3Args)
       let updateObj: { reservedTo?: Moment, step: number, duration: string, stepFinished: boolean} = 
         { step: 3, duration: message.text, stepFinished: true}
       if(currentReservation.reservedFrom){
-        const reservedFromMoment = moment.utc(currentReservation.reservedFrom)
+        const reservedFromMoment = moment(currentReservation.reservedFrom)
         // const reservedFromMoment1 = moment(currentReservation.reservedFrom)
         // const reservedFromMoment2 = moment(currentReservation.reservedFrom).tz('UTC')
         // const reservedFromMoment3 = moment(currentReservation.reservedFrom).tz('Europe/Kiev')
