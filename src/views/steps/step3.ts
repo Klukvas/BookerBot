@@ -32,6 +32,10 @@ export async function step3(args: Step3Args) {
           reservedFromMoment,
           message.text
         )
+        logger.debug(`
+        reservedTo.date(): ${reservedTo.date()}
+        reservedFromMoment.date(): ${reservedFromMoment.date()}
+        `)
         if(
           (reservedTo.hours() == env.closeHour && reservedTo.minutes() !== 0)
           ||

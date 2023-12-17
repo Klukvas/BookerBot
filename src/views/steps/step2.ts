@@ -16,11 +16,13 @@ type Step2Args = {
 }
 
 export async function step2({callback, user, res}: Step2Args) {
+  logger.info(`Step2 started for user: ${user._id}`)
   let selectedSeatId
   const chatId = callback.message.chat.id
   try{
     selectedSeatId = callback.data.split('-')[1].trim()
   }catch(err){
+    logger.error(`Error with parsing seatId: ${err}`)
     await sendResponse({
       message: step2Responses.seatNotFound,
       chatId: chatId,
@@ -35,7 +37,6 @@ export async function step2({callback, user, res}: Step2Args) {
       chatId: chatId,
       expressResp: res
     })
-    // res.send(step2Responses.seatNotFound)
   }else{
     const reservation = await ReservedSeats.findOneAndUpdate(
       {user: user._id, reservationFinished: false},
