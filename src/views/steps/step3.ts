@@ -33,6 +33,9 @@ export async function step3(args: Step3Args) {
           message.text
         )
         logger.debug(`
+        currentReservation.reservedFrom: ${currentReservation.reservedFrom}
+        reservedFromMoment: ${reservedFromMoment}
+        reservedTo: ${reservedTo}
         reservedTo.date(): ${reservedTo.date()}
         reservedFromMoment.date(): ${reservedFromMoment.date()}
         `)
