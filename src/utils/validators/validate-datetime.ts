@@ -16,7 +16,7 @@ type ValidateDatetimeErrorResult = {
 type ValidateDatetimeResult = ValidateDatetimeErrorResult | ValidateDatetimeSuccessResult
 
 export function validateDatetime(messageText: string): ValidateDatetimeResult {
-  let reservedFrom = moment(messageText, ['DD.MM.YYYY HH:mm', 'DD/MM/YYYY HH:mm'], true).tz('UTC');
+  let reservedFrom = moment.utc(messageText, ['DD.MM.YYYY HH:mm', 'DD/MM/YYYY HH:mm'], true);
 
   // Check if the format is valid
   if (reservedFrom.isValid()) {
@@ -25,7 +25,7 @@ export function validateDatetime(messageText: string): ValidateDatetimeResult {
     
     if (minutes === 0 || minutes === 30) {
       // Check if the date is more than 7 days in the future
-      const maxAllowedDate = moment().add(7, 'days').tz('UTC');
+      const maxAllowedDate = moment.utc().add(7, 'days');
       if (reservedFrom.isAfter(maxAllowedDate)) {
         return {
           isValid: false,

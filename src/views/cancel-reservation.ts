@@ -30,8 +30,8 @@ export async function cancelReservation({reservationId, res, chatId}: CancelRese
 
     `)
     if(reservation.reservationFinished){
-      const targetDate = moment(reservation.reservedFrom).tz('UTC');
-      const currentDate = moment().tz('UTC');
+      const targetDate = moment.utc(reservation.reservedFrom);
+      const currentDate = moment.utc()
       const daysDifference = targetDate.diff(currentDate, 'days');
       logger.debug(`daysDifference: ${daysDifference}`)
       if(daysDifference < 1 && daysDifference > 0){
