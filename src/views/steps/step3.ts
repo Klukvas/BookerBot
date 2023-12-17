@@ -27,16 +27,21 @@ export async function step3({message, user, res, currentReservation}: Step3Args)
         { step: 3, duration: message.text, stepFinished: true}
       if(currentReservation.reservedFrom){
         const reservedFromMoment = moment.utc(currentReservation.reservedFrom)
+        const reservedFromMoment1 = moment(currentReservation.reservedFrom)
+        const reservedFromMoment2 = moment(currentReservation.reservedFrom).tz('UTC')
+        const reservedFromMoment3 = moment(currentReservation.reservedFrom).tz('Europe/Kiev')
+        logger.debug(`
+          in db: ${currentReservation.reservedFrom}
+          reservedFromMoment: ${reservedFromMoment}
+          reservedFromMoment1: ${reservedFromMoment1}
+          reservedFromMoment2: ${reservedFromMoment2}
+          reservedFromMoment3: ${reservedFromMoment3}
+        `)
         const reservedTo = addDurationToDate(
           reservedFromMoment,
           message.text
         )
-        logger.debug(`
-        id db: ${currentReservation.reservedFrom}
-        from moment: ${reservedFromMoment}
-        to moment: ${reservedTo}
-        to moment utc: ${reservedTo.tz('UTC')}
-        `)
+        logger.debug(`reservedTo: ${reservedTo}`)
         if(
           (reservedTo.hours() == env.closeHour && reservedTo.minutes() !== 0)
           ||
