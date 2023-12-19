@@ -1,5 +1,6 @@
 import { IReserved, Seat } from "../../models";
 import { calculatePrice } from "../calculate-price";
+import { DurationHelper } from "../duration-helper";
 
 export async function reservationFormatterBot(reservations: IReserved[], additionalData?: string){
   let formattedText = ''
@@ -13,7 +14,8 @@ export async function reservationFormatterBot(reservations: IReserved[], additio
     }
 
     if(item.duration){
-      baseText+=`\tпродолжительность: ${item.duration}\n`
+      const stringDuration = DurationHelper.minutesToString(item.duration)
+      baseText+=`\tпродолжительность: ${stringDuration }\n`
     }
 
     if(item.reservedFrom){

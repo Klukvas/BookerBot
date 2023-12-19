@@ -30,7 +30,7 @@ export async function approveReservation({ user, res, chatId}: DefaultCommandPro
 
     // check if time is not taken
     const sameReservations = await ReservedSeats.find({
-      user: {$ne: currentReservation.user},
+      user: {$ne: currentReservation.userId},
       reservedFrom: {$gte: currentReservation.reservedFrom}, 
       reservedTo: {$lte: currentReservation.reservedTo}, 
       seatId: currentReservation.seatId,
@@ -43,7 +43,6 @@ export async function approveReservation({ user, res, chatId}: DefaultCommandPro
         expressResp: res,
         chatId
       })
-      // res.send(responseMessages.sameReservationFinished)
     }else{
       // first -> set reservation as finished
       await ReservedSeats.updateOne(
@@ -68,7 +67,6 @@ export async function approveReservation({ user, res, chatId}: DefaultCommandPro
         expressResp: res,
         chatId
       })
-      // res.send(responseMessages.reservationFinished)
     }
 
   }

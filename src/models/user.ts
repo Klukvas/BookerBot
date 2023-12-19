@@ -6,7 +6,7 @@ interface IUser extends Document {
   userId: number;
   lastName?: string;
   first_name?: string;
-  reserveds: Schema.Types.ObjectId[]
+  reservations: Schema.Types.ObjectId[]
 }
 
 const userSchema = new Schema<IUser>({
@@ -27,7 +27,7 @@ const userSchema = new Schema<IUser>({
   },
   lastName: { type: String },
   first_name: { type: String },
-  reserveds: [{
+  reservations: [{
     type: Schema.Types.ObjectId,
     ref: 'ReservedSeats'
   }]

@@ -24,7 +24,7 @@ export async function cancelReservation({reservationId, res, chatId}: CancelRese
     })
   }else{
     logger.debug(`
-      user: ${reservation.user}
+      user: ${reservation.userId}
       In process of cancel reservation
       reservation finished: ${reservation.reservationFinished}
 

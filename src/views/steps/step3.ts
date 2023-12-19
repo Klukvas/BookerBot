@@ -1,9 +1,8 @@
 import { Response } from "express"
 import { IReserved, ReservedSeats } from "../../models"
 import { IUser } from "../../models/user"
-import { validateDuration } from "../../utils/validators/validate-duration"
 import { getNextSteps } from "../../utils/get-next-steps"
-import { addDurationToDate } from "../../utils/add-duration-to-date"
+import { addDurationToDate } from "../../utils/add-duration-to-date_old"
 import { dateToMoment } from "../../utils/date-to-moment"
 import moment, { Moment } from "moment-timezone"
 import { Message } from "../../types/new-message"
@@ -11,6 +10,7 @@ import { step3Responses } from "../../utils/response-messages"
 import { sendResponse } from "../../utils/send-response"
 import { logger } from "../../core/logger"
 import env from "../../core/env"
+import { DurationHelper } from "../../utils/duration-helper"
 
 type Step3Args = {
   message: Message
@@ -21,7 +21,7 @@ type Step3Args = {
 }
 
 export async function step3({message, user, res, currentReservation}: Step3Args) {
-  const isValidDuration = validateDuration(message.text)
+  const isValidDuration = DurationHelper.isDurationValid(message.text)
     if(isValidDuration){
       let updateObj: { reservedTo?: Moment, step: number, duration: string, stepFinished: boolean} = 
         { step: 3, duration: message.text, stepFinished: true}

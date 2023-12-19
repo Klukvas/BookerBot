@@ -5,7 +5,7 @@ import { dateToMoment } from "../date-to-moment";
 
 export async function reservationFormatterAdmin(reservation: IReserved){
   const seatName = (await Seat.findOne({_id: reservation.seatId}))?.seatNumber
-  const rawUser = await User.findOne({_id: reservation.user})
+  const rawUser = await User.findOne({_id: reservation.userId})
   const user = rawUser?.username || rawUser?.lastName || rawUser?.first_name
   const prettyReservedFrom = reservation.reservedFrom ? 
     dateToMoment(reservation.reservedFrom).format('DD/MM/YY HH:mm') : 

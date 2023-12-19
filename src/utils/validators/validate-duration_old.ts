@@ -29,5 +29,5 @@ export function validateDuration(timeString: string) {
 
   // If all conditions pass, it's a valid time
   return true;
-  }
+}
   

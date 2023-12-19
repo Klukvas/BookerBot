@@ -2,7 +2,7 @@ import { Response } from "express"
 import { IUser } from "../../models/user"
 import { validateDatetime } from "../../utils/validators/validate-datetime"
 import { IReserved, ReservedSeats } from "../../models"
-import { addDurationToDate } from "../../utils/add-duration-to-date"
+import { addDurationToDate } from "../../utils/add-duration-to-date_old"
 import moment, { Moment } from "moment"
 import { responseMessages, step3Responses, step4Responses } from "../../utils/response-messages"
 import { getNextSteps } from "../../utils/get-next-steps"
@@ -10,6 +10,7 @@ import { Message } from "../../types/new-message"
 import { sendResponse } from "../../utils/send-response"
 import { logger } from "../../core/logger"
 import env from "../../core/env"
+import { DurationHelper } from "../../utils/duration-helper"
 
 type Step4Args = {
   user: IUser
@@ -36,7 +37,7 @@ export async function step4(args: Step4Args) {
       };
       if(currentReservation.duration){
         const reservedFrom = moment(validatedDateTime.value)
-        const reservedTo = addDurationToDate(reservedFrom, currentReservation.duration)
+        const reservedTo = DurationHelper.addDurationToDate({duration: currentReservation.duration, date: reservedFrom})
         if(
           (reservedTo.hours() == env.closeHour && reservedTo.minutes() !== 0)
           ||
