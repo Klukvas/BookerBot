@@ -41,6 +41,11 @@ class AdminController{
     }
   }
 
+  static async getUserTable(req: Request, res: Response){
+    const users = await User.find({})
+    res.render('users-table', {users: users});
+  }
+
   static async createNewSeat(req: Request, res: Response){
     const { seatNumber, type, cost } = req.body;
     if(type){

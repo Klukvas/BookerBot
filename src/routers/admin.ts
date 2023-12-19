@@ -7,6 +7,7 @@ const adminRouter = express.Router()
 adminRouter.get('/', sessionChecker, AdminController.getCurrentReservations)
 adminRouter.get('/createSeat', sessionChecker, AdminController.getCreateNewSeatForm)
 adminRouter.get('/login', AdminController.getLoginForm)
+adminRouter.get('/users', AdminController.getUserTable)
 
 adminRouter.post('/createSeat', AdminController.createNewSeat)
 adminRouter.post('/login', AdminController.login)
