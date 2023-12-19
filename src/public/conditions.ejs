@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/styles/conditions.css">
+    <title>Promos</title>
+</head>
+<body>
+    <%- include('header.ejs') %>
+    <h1>Create Condition</h1>
+    <div class="create-form-container">
+        <form action="/admin/create-condition" method="POST">
+            <label for="conditionName">Condition Name:</label>
+            <input type="text" id="conditionName" name="conditionName" required>
+            <% if (errorMessages.conditionName) { %>
+                <p style="color: red;"><%= errorMessages.conditionName %></p>
+            <% } %>
+    
+            <label for="isWeekend">Is for weekends</label>
+            <input type="checkbox" id="isWeekend" name="isWeekend">
+    
+            <label for="isWorkday">Is for work days</label>
+            <input type="checkbox" id="isWorkday" name="isWorkday">
+    
+            <label for="durationFrom">Duration from:</label>
+            <input type="time" id="durationFrom" name="durationFrom">
+            <% if (errorMessages.durationFrom) { %>
+                <p style="color: red;"><%= errorMessages.durationFrom %></p>
+            <% } %>
+    
+            <label for="duraionTo">Duration to:</label>
+            <input type="time" id="duraionTo" name="duraionTo">
+            <% if (errorMessages.duraionTo) { %>
+                <p style="color: red;"><%= errorMessages.duraionTo %></p>
+            <% } %>
+    
+            <label for="timeFrom">Time from</label>
+            <input type="time" id="timeFrom" name="timeFrom">
+            <% if (errorMessages.timeFrom) { %>
+                <p style="color: red;"><%= errorMessages.timeFrom %></p>
+            <% } %>
+    
+            <label for="timeTo">Time to:</label>
+            <input type="time" id="timeTo" name="timeTo">
+            <% if (errorMessages.timeTo) { %>
+                <p style="color: red;"><%= errorMessages.timeTo %></p>
+            <% } %>
+            
+            <!-- Add other fields as needed for your condition schema -->
+    
+            <button type="submit">Create Condition</button>
+        </form>
+    </div>
+    
+
+    <h1>Condition Table</h1>
+    <% if (conditions && conditions.length > 0) { %>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Is weekend</th>
+                    <th>Is work day</th>
+                    <th>Duration from</th>
+                    <th>Duraion to</th>
+                    <th>Time from</th>
+                    <th>Time to</th>
+                    <th>Action</th> <!-- New column for the delete button -->
+                </tr>
+            </thead>
+            <tbody>
+                <% conditions.forEach(condition => { %>
+                    <tr>
+                        <td><%= condition.name %></td>
+                        <td><%= condition.isWeekend %></td>
+                        <td><%= condition.isWorkday %></td>
+
+                        <% if(condition.durationFrom){%>
+                            <td><%= condition.durationFrom %></td>
+                        <%}else{%>
+                            <td>--</td>
+                        <%} %>
+
+                        <% if(condition.duraionTo){%>
+                            <td><%= condition.duraionTo %></td>
+                        <%}else{%>
+                            <td>--</td>
+                        <%} %>
+
+                        <% if(condition.timeFrom){%>
+                            <td><%= condition.timeFrom %></td>
+                        <%}else{%>
+                            <td>--</td>
+                        <%} %>
+
+                        <% if(condition.timeTo){%>
+                            <td><%= condition.timeTo %></td>
+                        <%}else{%>
+                            <td>--</td>
+                        <%} %>
+
+                        <td>
+                            <form action="/admin/delete-condition" method="post" style="display:inline;">
+                                <input type="hidden" name="deleteId" value="<%= condition._id %>">
+                                <button type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    <% } else { %>
+        <p>No condition data available.</p>
+    <% } %>
+</body>
+</html>

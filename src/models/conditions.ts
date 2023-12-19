@@ -6,15 +6,17 @@ import {Document, Schema, model} from 'mongoose'
 interface ICondition extends Document {
   name: string
   isWeekend: boolean
+  isWorkday: boolean
   durationFrom: number
   duraionTo: number
   timeFrom: string
   timeTo: string
 }
 
-const promoSchema = new Schema<ICondition>({
+const conditionSchema = new Schema<ICondition>({
     name: {type: String, required: true},
     isWeekend: {type: Boolean},
+    isWorkday: {type: Boolean},
     durationFrom: {type: Number},
     duraionTo: {type: Number},
     timeFrom: {type: String},
@@ -22,6 +24,6 @@ const promoSchema = new Schema<ICondition>({
 });
 
 
-const Condition = model<ICondition>('Conditions', promoSchema);
+const Condition = model<ICondition>('Conditions', conditionSchema);
 
 export {Condition, ICondition}

@@ -2,7 +2,6 @@ import { Response } from "express"
 import { IReserved, ReservedSeats } from "../../models"
 import { IUser } from "../../models/user"
 import { getNextSteps } from "../../utils/get-next-steps"
-import { addDurationToDate } from "../../utils/add-duration-to-date_old"
 import { dateToMoment } from "../../utils/date-to-moment"
 import moment, { Moment } from "moment-timezone"
 import { Message } from "../../types/new-message"
@@ -27,17 +26,8 @@ export async function step3({message, user, res, currentReservation}: Step3Args)
         { step: 3, duration: message.text, stepFinished: true}
       if(currentReservation.reservedFrom){
         const reservedFromMoment = moment.utc(currentReservation.reservedFrom)
-        const reservedTo = addDurationToDate(
-          reservedFromMoment.clone(),
-          message.text
-        )
-        logger.debug(`
-          reservedTo: ${reservedTo}
-          reservedTo date: ${reservedTo.date()}
-          ================================================================
-          reservedFrom: ${reservedFromMoment}
-          reservedFrom date: ${reservedFromMoment.date()}
-        `)
+        const durationNumer = DurationHelper.stringToMinutes(message.text)
+        const reservedTo = DurationHelper.addDurationToDate({duration: durationNumer, date: reservedFromMoment})
         if(
           (reservedTo.hours() == env.closeHour && reservedTo.minutes() !== 0)
           ||

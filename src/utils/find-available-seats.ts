@@ -1,6 +1,5 @@
 import moment from "moment"
 import { IReserved, ISeat, ReservedSeats, Seat } from "../models"
-import { addDurationToDate } from "./add-duration-to-date_old"
 
 type CrateSeatSuggestionArgs = {
     currentReservation: IReserved

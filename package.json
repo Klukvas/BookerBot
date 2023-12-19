@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "tsc && node dist/app.js",
-    "test": "cross-env NODE_ENV=node jest --runInBand --detectOpenHandles --forceExit",
+    "test": "cross-env NODE_ENV=test jest --runInBand --detectOpenHandles --forceExit",
     "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.ts\""
   },
   "author": "",
